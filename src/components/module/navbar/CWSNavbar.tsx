@@ -12,6 +12,15 @@ const navLinks = navLinksGenerator(clientViewConfig);
 
 const CWSNavbar = () => {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+    const [scroll, setScroll] = useState(false);
+
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            setScroll(window.scrollY > 500);
+        });
+    });
+
+    console.log(scroll);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(min-width: 768px)");
@@ -33,7 +42,7 @@ const CWSNavbar = () => {
     }, []);
 
     return (
-        <div>
+        <div className={`top-0 left-0 right-0 ${scroll ? "sticky animate-fadeInDown" : ""}`}>
             <div className="bg-cws-primary-dark relative">
                 <div className="container !py-5 flex items-center justify-between h-24 gap-7">
                     <div className="w-32">

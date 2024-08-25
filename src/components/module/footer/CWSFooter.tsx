@@ -2,8 +2,7 @@
 import { Link } from "react-router-dom";
 import cws_logo from "../../../assets/images/cws-logo.svg";
 import { informationLinks, supportLinks } from "../../../constants";
-import { Button, Divider } from "keep-react";
-import Facebook from "../../../assets/icons/Facebook";
+import { Button } from "keep-react";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const CWSFooter = () => {
@@ -32,6 +31,7 @@ const CWSFooter = () => {
                         <div className="space-y-3">
                             {informationLinks?.map((link) => (
                                 <Link
+                                    key={link?.key}
                                     className="text-white block transition-all duration-300 hover:text-cws-yellow hover:ml-2"
                                     to={link?.path}
                                 >
@@ -45,6 +45,7 @@ const CWSFooter = () => {
                         <div className="space-y-3">
                             {supportLinks?.map((link) => (
                                 <Link
+                                    key={link?.key}
                                     className="text-white block transition-all duration-300 hover:text-cws-yellow hover:ml-2"
                                     to={link?.path}
                                 >
