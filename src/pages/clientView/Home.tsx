@@ -3,7 +3,7 @@ import { FaAngleRight } from "react-icons/fa";
 
 const Home = () => {
     return (
-        <div className="bg-[url(https://i.ibb.co/HKW2wZT/slide10.jpg)] bg-no-repeat bg-left">
+        <div className="bg-[url(https://i.ibb.co/HKW2wZT/slide10.jpg)] bg-no-repeat bg-left mb-10">
             <div className="max-w-full h-full overflow-hidden bg-gradient-to-l to-cws-primary-dark/80 from-cws-primary-dark/40">
                 <div className="container flex h-full text-white flex-col space-y-4 lg:space-y-6 items-left justify-center min-h-[500px]">
                     <h3 className="text-xl">Transform Your Car Today - Act Fast!!</h3>

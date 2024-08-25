@@ -10,7 +10,7 @@ import { GoDot } from "react-icons/go";
 
 const navLinks = navLinksGenerator(clientViewConfig);
 
-const PWSNavbar = () => {
+const CWSNavbar = () => {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
     useEffect(() => {
@@ -109,4 +109,4 @@ const PWSNavbar = () => {
     );
 };
 
-export default PWSNavbar;
+export default CWSNavbar;

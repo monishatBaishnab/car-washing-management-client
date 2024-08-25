@@ -1,12 +1,13 @@
 import { Outlet } from "react-router-dom";
-import PWSNavbar from "../components/module/navbar/PWSNavbar";
+import CWSNavbar from "../components/module/navbar/CWSNavbar";
+import CWSFooter from "../components/module/footer/CWSFooter";
 
 const ClientView = () => {
     return (
         <div>
-            <PWSNavbar />
+            <CWSNavbar />
             <Outlet />
-            <h1>This is footer</h1>
+            <CWSFooter />
         </div>
     );
 };
