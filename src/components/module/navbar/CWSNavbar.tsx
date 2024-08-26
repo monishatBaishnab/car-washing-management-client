@@ -42,7 +42,7 @@ const CWSNavbar = () => {
     }, []);
 
     return (
-        <div className={`top-0 left-0 right-0 ${scroll ? "sticky animate-fadeInDown" : ""}`}>
+        <div className={`top-0 left-0 right-0 ${scroll ? "sticky animate-fadeInDown z-50" : ""}`}>
             <div className="bg-cws-primary-dark relative">
                 <div className="container !py-5 flex items-center justify-between h-24 gap-7">
                     <div className="w-32">
