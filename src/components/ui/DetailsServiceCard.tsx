@@ -2,18 +2,17 @@ import { FaLongArrowAltRight, FaStar } from "react-icons/fa";
 import { GiDuration } from "react-icons/gi";
 import { TbCoinTakaFilled } from "react-icons/tb";
 
-const FeaturedServiceCard = () => {
+const DetailsServiceCard = () => {
     return (
-        <div>
-            <div className="w-full h-60 sm:h-80 overflow-hidden">
+        <div className="bg-white p-4 border border-slate-200">
+            <div className="w-full h-60 sm:h-40 overflow-hidden">
                 <img
                     className="w-full h-full object-cover"
                     src="https://i.ibb.co/YjbfkFw/neelabh-raj-r-S9-PBJBY5pc-unsplash.jpg"
                     alt=""
                 />
             </div>
-            <div className="bg-white relative sm:ml-5 sm:-mt-20 p-5 space-y-2 sm:shadow-lg">
-                <div className="flex items-center gap-1 text-slate-700">
+            <div className="space-y-2 pt-5">
                 <div className="flex items-center gap-3 text-slate-700">
                     <div className="flex items-center gap-1 text-sm font-medium">
                         <FaStar className="text-cws-yellow" />
@@ -29,7 +28,6 @@ const FeaturedServiceCard = () => {
                         <span>30</span>
                     </div>
                 </div>
-                </div>
                 <h4 className="text-lg font-semibold">Full-Service Detailing Package</h4>
                 <p className="text-slate-700">
                     Comprehensive detailing package that covers both interior and exterior cleaning,
@@ -43,4 +41,4 @@ const FeaturedServiceCard = () => {
     );
 };
 
-export default FeaturedServiceCard;
+export default DetailsServiceCard;

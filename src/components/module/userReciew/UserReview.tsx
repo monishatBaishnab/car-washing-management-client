@@ -1,8 +1,7 @@
 import { Button, Input, Rating, RatingStar, Textarea } from "keep-react";
 import { statistics } from "../../../constants";
 import SectionTItle from "../../ui/SectionTItle";
-import { Star } from "phosphor-react";
-import { FaStar } from "react-icons/fa";
+import { FaLongArrowAltRight, FaStar } from "react-icons/fa";
 
 const UserReview = () => {
     return (
@@ -20,11 +19,20 @@ const UserReview = () => {
                         ))}
                     </div>
 
-                    <SectionTItle title="User Reviews" />
+                    <SectionTItle
+                        title="User Reviews"
+                        rightContent={
+                            <Button
+                                className="gap-1 hover:gap-4 bg-white outline outline-cws-yellow text-cws-yellow hover:bg-cws-yellow hover:text-white"
+                            >
+                                See all reviews <FaLongArrowAltRight />
+                            </Button>
+                        }
+                    />
 
                     <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         <div className="sm:col-span-2 grid gap-5 grid-cols-1 sm:grid-cols-2">
-                            <div className="space-y-3">
+                            <div>
                                 <div className="h-48 w-full overflow-hidden">
                                     <img
                                         className="w-full h-full object-cover"
@@ -32,39 +40,7 @@ const UserReview = () => {
                                         alt=""
                                     />
                                 </div>
-                                <div className="space-y-3">
-                                    <p className="text-slate-800">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Est
-                                        error saepe sint unde quibusdam fuga. Lorem ipsum, dolor sit
-                                        amet consectetur adipisicing elit. Nulla, officiis iusto
-                                        dicta
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-10 h-10 rounded-full overflow-hidden">
-                                            <img
-                                                className="h-full w-full object-cover"
-                                                src="https://i.ibb.co/5G1XTfb/customer.webp"
-                                                alt=""
-                                            />
-                                        </div>
-                                        <div>
-                                            <h5 className="-mb-1 font-medium">Monishat Baishanb</h5>
-                                            <small className="text-slate-700">
-                                                CEO. Baishnab Group
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="space-y-3">
-                                <div className="h-48 w-full overflow-hidden">
-                                    <img
-                                        className="w-full h-full object-cover"
-                                        src="https://i.ibb.co/YjbfkFw/neelabh-raj-r-S9-PBJBY5pc-unsplash.jpg"
-                                        alt=""
-                                    />
-                                </div>
-                                <div className="space-y-3">
+                                <div className="space-y-3 bg-white pt-3">
                                     <p className="text-slate-800">
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Est
                                         error saepe sint unde quibusdam fuga. Lorem ipsum, dolor sit

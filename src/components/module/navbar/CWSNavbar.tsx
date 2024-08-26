@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import cws_logo from "../../../assets/images/cws-logo.svg";
 import navLinksGenerator from "../../../utils/navLinksGenerator";
 import clientViewConfig from "../../../routes/clientViewRoutes/clientViewRoutes";
@@ -13,14 +13,13 @@ const navLinks = navLinksGenerator(clientViewConfig);
 const CWSNavbar = () => {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
     const [scroll, setScroll] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
             setScroll(window.scrollY > 500);
         });
     });
-
-    console.log(scroll);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(min-width: 768px)");
@@ -76,7 +75,10 @@ const CWSNavbar = () => {
                                 </NavLink>
                             ))}
                             <div className="flex items-center gap-2 sm:hidden">
-                                <Button className="px-5 w-full bg-cws-primary-dark transition-all hover:bg-cws-yellow">
+                                <Button
+                                    onClick={() => navigate("/sign-in")}
+                                    className="px-5 w-full bg-cws-primary-dark transition-all hover:bg-cws-yellow"
+                                >
                                     Sign In
                                 </Button>
                                 <Button
@@ -107,7 +109,10 @@ const CWSNavbar = () => {
                             >
                                 <FaBars />
                             </Button>
-                            <Button className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex">
+                            <Button
+                                onClick={() => navigate("/sign-in")}
+                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex"
+                            >
                                 Sign In
                             </Button>
                         </div>

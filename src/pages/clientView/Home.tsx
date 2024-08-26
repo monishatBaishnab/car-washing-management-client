@@ -51,7 +51,7 @@ const Home = () => {
                     />
                     <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-10">
                         {ourDetails?.map((data) => (
-                            <div className="p-6 bg-slate-100 space-y-3 transition-all outline-slate-200 shadow-slate-200 hover:outline hover:shadow-lg">
+                            <div key={data?.title} className="p-6 bg-slate-100 space-y-3 transition-all outline-slate-200 shadow-slate-200 hover:outline hover:shadow-lg">
                                 <div className="p-3 bg-cws-yellow inline-block">
                                     <img src={data.image} alt={data.title} />
                                 </div>
