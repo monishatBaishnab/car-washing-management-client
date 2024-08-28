@@ -43,13 +43,13 @@ const Register = () => {
             <div className="flex w-full min-h-screen items-center justify-center">
                 <CWSForm
                     resolver={zodResolver(registerSchema)}
-                    // defaultValues={{
-                    //     name: "Tech Guru",
-                    //     email: "support@df-euru.com",
-                    //     password: "tg-password",
-                    //     phone: "0987654321",
-                    //     address: "456 Elm Street, Town, Country",
-                    // }}
+                    defaultValues={{
+                        name: "Tech Guru",
+                        email: "support@df-euru.com",
+                        password: "tg-password",
+                        phone: "0987654321",
+                        address: "456 Elm Street, Town, Country",
+                    }}
                     onSubmit={handleSubmit}
                 >
                     <div className="bg-white p-5 min-w-96 space-y-3">

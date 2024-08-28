@@ -18,8 +18,7 @@ const CWSNavbar = () => {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
     const [scroll, setScroll] = useState(false);
     const navigate = useNavigate();
-    console.log(user);
-
+    
     const handleLoginOut = () => {
         if (user === null) {
             return navigate("/login");
