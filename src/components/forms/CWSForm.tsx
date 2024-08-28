@@ -17,12 +17,11 @@ const CWSForm = ({ children, onSubmit, defaultValues, resolver }: TFormProps) =>
     if (defaultValues) {
         formConfig["defaultValues"] = defaultValues;
     }
-
+    
     if (resolver) {
         formConfig["resolver"] = resolver;
     }
-
-    const methods = useForm(formConfig);
+   const methods = useForm(formConfig);
 
     const submit: SubmitHandler<FieldValues> = (data) => {
         onSubmit(data);

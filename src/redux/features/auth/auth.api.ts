@@ -2,14 +2,14 @@ import { baseApi } from "../../baseApi";
 
 const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        signUp: builder.mutation({
+        register: builder.mutation({
             query: (payload) => ({
-                url: "/auth/sign-up",
+                url: "/auth/register",
                 method: "POST",
                 body: payload,
             }),
         }),
-        signIn: builder.mutation({
+        login: builder.mutation({
             query: (payload) => ({
                 url: "/auth/login",
                 method: "POST",
@@ -26,4 +26,4 @@ const authApi = baseApi.injectEndpoints({
 });
 
 // Export the generated hooks
-export const { useSignUpMutation, useSignInMutation, useCreateAdminMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useCreateAdminMutation } = authApi;

@@ -3,8 +3,8 @@ import MainLayout from "../layout/ClientView";
 import routeGenerator from "../utils/routeGenerator";
 import clientViewConfig from "./clientViewRoutes/clientViewRoutes";
 import { NotFound } from "../pages/clientView/NotFound";
-import Signin from "../pages/clientView/Signin";
-import Signup from "../pages/clientView/Signup";
+import Login from "../pages/clientView/Login";
+import Register from "../pages/clientView/Register";
 const routes = createBrowserRouter([
     {
         path: "/",
@@ -13,12 +13,12 @@ const routes = createBrowserRouter([
         children: routeGenerator(clientViewConfig),
     },
     {
-        path: "sign-up",
-        element: <Signup />,
+        path: "register",
+        element: <Register />,
     },
     {
-        path: "sign-in",
-        element: <Signin />,
+        path: "login",
+        element: <Login />,
     },
 ]);
 

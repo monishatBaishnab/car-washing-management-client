@@ -1,43 +1,49 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, toast } from "keep-react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CWSForm from "../../components/forms/CWSForm";
 import CWSInput from "../../components/forms/CWSInput";
-import { useSignInMutation } from "../../redux/features/auth/auth.api";
 import { CgSpinnerTwo } from "react-icons/cg";
 import { jwtDecode } from "jwt-decode";
 import { useAppDispatch } from "../../redux/hooks";
 import { setUser } from "../../redux/features/auth/authSlice";
+import { useLoginMutation } from "../../redux/features/auth/auth.api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../../schemas";
 
-const Signin = () => {
+const Login = () => {
     const navigate = useNavigate();
-    const [signIn, { isLoading }] = useSignInMutation();
+    const [login, { isLoading }] = useLoginMutation();
     const dispatch = useAppDispatch();
+    const location = useLocation();
 
     const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            const res = await signIn(data).unwrap();
+            const res = await login(data).unwrap();
             if (!res?.success) {
-                toast.error("Failed to sing in.");
+                toast.error("Failed to log in.");
             }
             if (res.error) {
-                toast.error("Failed to sing in.");
+                toast.error("Failed to log in.");
             }
             if (res.data) {
                 const userData = jwtDecode(res.data.token);
                 dispatch(setUser({ user: userData, token: res.data.token }));
-                navigate('/')
-                toast.success("Successfully user signed in.");
+                navigate("/");
+                toast.success("Successfully user logged in.");
             }
-        } catch (error) {
-            console.log(error);
-            toast.error("Failed to sing in.");
+        } catch (err) {
+            // console.log(error);
+            toast.error("Failed to log in.");
         }
     };
+
     return (
         <section className="bg-slate-100">
             <div className="flex w-full min-h-screen items-center justify-center">
                 <CWSForm
+                    resolver={zodResolver(loginSchema)}
                     defaultValues={{
                         email: "support@tt-guru.com",
                         password: "tg-password",
@@ -67,14 +73,17 @@ const Signin = () => {
                             {isLoading ? (
                                 <CgSpinnerTwo className="animate-spin text-white text-2xl" />
                             ) : (
-                                "Sign in"
+                                "Log in"
                             )}
                         </Button>
                         <span className="block">
                             Don't have an account?{" "}
-                            <Link to="/sign-up" className="text-cws-yellow">
-                                Sign Up
-                            </Link>{" "}
+                            <span
+                                onClick={() => navigate("/register", { state: location?.state })}
+                                className="text-cws-yellow cursor-pointer"
+                            >
+                                Register
+                            </span>{" "}
                             hare.
                         </span>
                     </div>
@@ -84,4 +93,4 @@ const Signin = () => {
     );
 };
 
-export default Signin;
+export default Login;

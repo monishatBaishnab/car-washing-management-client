@@ -4,16 +4,29 @@ import navLinksGenerator from "../../../utils/navLinksGenerator";
 import clientViewConfig from "../../../routes/clientViewRoutes/clientViewRoutes";
 import { LuShoppingCart } from "react-icons/lu";
 import { Button } from "keep-react";
-import { FaBars, FaRegUser } from "react-icons/fa";
+import { FaBars,} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { GoDot } from "react-icons/go";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { logOut } from "../../../redux/features/auth/authSlice";
 
 const navLinks = navLinksGenerator(clientViewConfig);
 
 const CWSNavbar = () => {
+    const user = useAppSelector((state) => state.auth.user);
+    const dispatch = useAppDispatch();
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
     const [scroll, setScroll] = useState(false);
     const navigate = useNavigate();
+    console.log(user);
+
+    const handleLoginOut = () => {
+        if (user === null) {
+            return navigate("/login");
+        } else if (user) {
+            return dispatch(logOut());
+        }
+    };
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
@@ -76,10 +89,10 @@ const CWSNavbar = () => {
                             ))}
                             <div className="flex items-center gap-2 sm:hidden">
                                 <Button
-                                    onClick={() => navigate("/sign-in")}
-                                    className="px-5 w-full bg-cws-primary-dark transition-all hover:bg-cws-yellow"
+                                    onClick={handleLoginOut}
+                                    className="px-5 bg-cws-primary-dark transition-all hover:bg-cws-yellow hidden sm:flex"
                                 >
-                                    Sign In
+                                    {user ? "Log out" : "Log in"}
                                 </Button>
                                 <Button
                                     shape="icon"
@@ -96,12 +109,7 @@ const CWSNavbar = () => {
                             >
                                 <LuShoppingCart />
                             </Button>
-                            <Button
-                                shape="icon"
-                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow"
-                            >
-                                <FaRegUser />
-                            </Button>
+
                             <Button
                                 onClick={() => setIsNavbarVisible((prev) => !prev)}
                                 shape="icon"
@@ -110,10 +118,10 @@ const CWSNavbar = () => {
                                 <FaBars />
                             </Button>
                             <Button
-                                onClick={() => navigate("/sign-in")}
+                                onClick={handleLoginOut}
                                 className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex"
                             >
-                                Sign In
+                                {user ? "Log out" : "Log in"}
                             </Button>
                         </div>
                     </div>

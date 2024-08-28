@@ -2,8 +2,12 @@ import { Button, Input, Rating, RatingStar, Textarea } from "keep-react";
 import { statistics } from "../../../constants";
 import SectionTItle from "../../ui/SectionTItle";
 import { FaLongArrowAltRight, FaStar } from "react-icons/fa";
+import { useAppSelector } from "../../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 const UserReview = () => {
+    const navigate = useNavigate();
+    const user = useAppSelector((state) => state.auth.user);
     return (
         <section className={`bg-[url(./process-bg.svg)] bg-no-repeat bg-cover bg-top`}>
             <div className="bg-white/60">
@@ -22,9 +26,7 @@ const UserReview = () => {
                     <SectionTItle
                         title="User Reviews"
                         rightContent={
-                            <Button
-                                className="gap-1 hover:gap-4 bg-white outline outline-cws-yellow text-cws-yellow hover:bg-cws-yellow hover:text-white"
-                            >
+                            <Button className="gap-1 hover:gap-4 bg-white outline outline-cws-yellow text-cws-yellow hover:bg-cws-yellow hover:text-white">
                                 See all reviews <FaLongArrowAltRight />
                             </Button>
                         }
@@ -96,9 +98,13 @@ const UserReview = () => {
                                     Share
                                 </Button>
                             </div>
-                            <div className="absolute left-0 right-0 top-0 bottom-0 bg-cws-primary-light/40 flex items-center justify-center">
-                                <Button className="bg-cws-yellow hover:bg-cws-yellow/95">
-                                    Sign In
+                            <div
+                                className={`${
+                                    !user ? "block" : "hidden"
+                                } absolute left-0 right-0 top-0 bottom-0 bg-cws-primary-light/40 flex items-center justify-center`}
+                            >
+                                <Button onClick={() => navigate('/login', {state: {from: '/'}})} className="bg-cws-yellow hover:bg-cws-yellow/95">
+                                    Log in
                                 </Button>
                             </div>
                         </div>
