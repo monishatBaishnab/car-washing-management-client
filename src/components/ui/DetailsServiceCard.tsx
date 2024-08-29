@@ -1,4 +1,4 @@
-import { FaLongArrowAltRight, FaStar } from "react-icons/fa";
+import { FaLongArrowAltRight } from "react-icons/fa";
 import { GiDuration } from "react-icons/gi";
 import { TbCoinTakaFilled } from "react-icons/tb";
 import { TService } from "../../types";
@@ -15,17 +15,17 @@ const DetailsServiceCard = ({ service }: { service: TService }) => {
             </div>
             <div className="space-y-2 pt-5">
                 <div className="flex items-center gap-3 text-slate-700">
-                    <div className="flex items-center gap-1 text-sm font-medium">
+                    {/* <div className="flex items-center gap-1 text-sm font-medium">
                         <FaStar className="text-cws-yellow" />
                         <span>{service?.rating}</span>
-                    </div>
+                    </div> */}
 
                     <div className="flex items-center gap-1 text-sm font-medium">
-                        <GiDuration className="mt-[1px]" />
+                        <GiDuration className="mt-[1.5px] text-lg" />
                         <span>{service?.duration} Min</span>
                     </div>
                     <div className="flex items-center gap-1 text-sm font-medium">
-                        <TbCoinTakaFilled className="mt-[1px]" />
+                        <TbCoinTakaFilled className="mt-[1.5px] text-lg" />
                         <span>{service?.price}</span>
                     </div>
                 </div>
