@@ -12,6 +12,7 @@ import {
     REGISTER,
 } from "redux-persist";
 import authSlice from "./features/auth/authSlice";
+import bookingsSlice from "./features/bookings/bookings.slice";
 
 const persistConfig = {
     key: "auth",
@@ -24,6 +25,7 @@ export const store = configureStore({
     reducer: {
         [baseApi.reducerPath]: baseApi.reducer,
         auth: persistedAuthReducer,
+        bookings: bookingsSlice,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

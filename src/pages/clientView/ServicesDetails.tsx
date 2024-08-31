@@ -1,6 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useFetchSingleServicesQuery } from "../../redux/features/services/services.api";
-import { Breadcrumb, BreadcrumbItem, Button } from "keep-react";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    Button,
+    Modal,
+    ModalClose,
+    ModalContent,
+    ModalHeader,
+} from "keep-react";
 import { CaretRight } from "phosphor-react";
 import { TDateSlot, TService } from "../../types";
 import { GiDuration } from "react-icons/gi";
@@ -8,6 +16,14 @@ import { TbCoinTakaFilled } from "react-icons/tb";
 import Select, { SingleValue } from "react-select";
 import { useState } from "react";
 import { dateValidator } from "../../utils/dateValidator";
+import CWSInput from "../../components/forms/CWSInput";
+import CWSForm from "../../components/forms/CWSForm";
+import { FieldValues, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { vehicleSchema } from "../../schemas";
+import { useAppDispatch } from "../../redux/hooks";
+import { setBookingData } from "../../redux/features/bookings/bookings.slice";
+import { FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6";
 
 type TSelectedDate = { label: string; value: string };
 
@@ -24,9 +40,10 @@ const formattedDate = {
 const ServicesDetails = () => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState<SingleValue<TSelectedDate>>(formattedDate);
-    const [selectedSlot, setSelectedSlot] = useState("");
+    const [selectedSlot, setSelectedSlot] = useState<{ slotId: string; slot: string } | null>(null);
     const { serviceId } = useParams();
     const { data: service } = useFetchSingleServicesQuery(serviceId as string);
+    const dispatch = useAppDispatch();
     const serviceData: TService = service?.data?.service ?? {};
     const slotsData: TDateSlot[] = service?.data?.slots ?? [];
     const dateOptions = slotsData?.map((slot) => ({
@@ -34,19 +51,36 @@ const ServicesDetails = () => {
         label: slot.date,
         isDisabled: !dateValidator(slot.date),
     }));
-    
     const selectedSlotData = slotsData?.find((slot) => selectedDate?.value === slot.date);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const onChange = (value: SingleValue<TSelectedDate>) => {
         setSelectedDate(value);
     };
 
-    const handleSelectSlot = (id: string) => {
-        setSelectedSlot(id);
+    const handleSelectSlot = (id: string, slot: string) => {
+        setSelectedSlot({ slotId: id, slot });
     };
 
-    const handleBooking = () => {
-        console.log("booking");
+    const handleBooking: SubmitHandler<FieldValues> = async (data) => {
+        const bookingData = {
+            vehicleType: data.vehicleType,
+            vehicleBrand: data.vehicleBrand,
+            vehicleModel: data.vehicleModel,
+            manufacturingYear: data.manufacturingYear,
+            registrationPlate: data.registrationPlate,
+            serviceId: serviceId as string,
+            slotId: selectedSlot?.slotId,
+        };
+
+        dispatch(
+            setBookingData({
+                bookingData,
+                serviceData: { ...serviceData, slot: selectedSlot?.slot },
+            })
+        );
+        navigate("/bookings");
+        setModalOpen(false);
     };
 
     return (
@@ -118,23 +152,110 @@ const ServicesDetails = () => {
                                                 !dateValidator(selectedDate?.value as string) ||
                                                 item.isBooked === "booked"
                                             }
-                                            onClick={() => handleSelectSlot(item._id)}
-                                            className={`px-3 py-1 bg-blue-100 rounded-md text-cws-primary-dark border border-blue-300 transition-all active:bg-blue-300/80 hover:bg-blue-300 disabled:bg-slate-200 disabled:border-slate-300 ${
-                                                item._id === selectedSlot ? "bg-blue-400" : ""
-                                            }`}
+                                            onClick={() =>
+                                                handleSelectSlot(
+                                                    item._id,
+                                                    `${item.startTime} - ${item.endTime}`
+                                                )
+                                            }
+                                            className={[
+                                                "flex items-center justify-center gap-2 px-4 py-1 rounded border transition-all border-blue-100 text-blue-800 bg-blue-50 cursor-pointer",
+                                                "hover:border-blue-300/70",
+                                                "active:bg-slate-200/60",
+                                                "disabled:bg-gray-100 disabled:text-gray-600 disabled:opacity-70 disabled:cursor-default disabled:border-gray-200 disabled:hover:border-gray-200",
+                                                `${
+                                                    item._id === selectedSlot?.slotId
+                                                        ? "!bg-blue-700 !text-white"
+                                                        : ""
+                                                }`,
+                                            ].join(" ")}
                                         >
-                                            {item.startTime} - {item.endTime}
+                                            {item._id === selectedSlot?.slotId ? (
+                                                <FaCircleCheck />
+                                            ) : (
+                                                <FaRegCircleCheck />
+                                            )}
+                                            <span>
+                                                {item.startTime} - {item.endTime}
+                                            </span>
                                         </button>
                                     ))}
                                 </div>
+                                {slotsData?.length < 1 ? (
+                                    <p className="text-slate-600 mt-3">No Slot Available</p>
+                                ) : (
+                                    <p className="text-slate-600 mt-3">
+                                        <span className="font-medium">Note : </span> Please select a
+                                        slot for booking service.
+                                    </p>
+                                )}
+
                                 <div className="mt-5">
                                     <Button
-                                        onClick={handleBooking}
+                                        disabled={!selectedSlot}
+                                        onClick={() => setModalOpen(true)}
                                         size="md"
-                                        className="bg-cws-yellow hover:bg-cws-yellow/80 active:bg-cws-yellow"
+                                        className="bg-cws-yellow hover:bg-cws-yellow/80 active:bg-cws-yellow disabled:bg-cws-yellow/80"
                                     >
                                         Book this service
                                     </Button>
+                                    <Modal isOpen={modalOpen} onOpenChange={setModalOpen}>
+                                        <ModalContent>
+                                            <ModalClose className="absolute right-4 top-4" />
+                                            <ModalHeader className="space-y-3">
+                                                <div>
+                                                    <h4 className="text-slate-700 font-medium text-lg">
+                                                        Vehicle Information
+                                                    </h4>
+                                                </div>
+                                                <CWSForm
+                                                    defaultValues={{
+                                                        vehicleType: "truck",
+                                                        vehicleBrand: "Ford",
+                                                        vehicleModel: "Explorer",
+                                                        manufacturingYear: 2021,
+                                                        registrationPlate: "XYZ456",
+                                                    }}
+                                                    resolver={zodResolver(vehicleSchema)}
+                                                    onSubmit={handleBooking}
+                                                >
+                                                    <div className="space-y-3 mb-5">
+                                                        <CWSInput
+                                                            name="vehicleType"
+                                                            type="text"
+                                                            placeholder="Vehicle Type"
+                                                        />
+                                                        <CWSInput
+                                                            name="vehicleBrand"
+                                                            type="text"
+                                                            placeholder="Vehicle Brand"
+                                                        />
+                                                        <CWSInput
+                                                            name="vehicleModel"
+                                                            type="text"
+                                                            placeholder="Vehicle Model"
+                                                        />
+                                                        <CWSInput
+                                                            name="manufacturingYear"
+                                                            type="text"
+                                                            placeholder="Vehicle Manufacturing Year "
+                                                        />
+                                                        <CWSInput
+                                                            name="registrationPlate"
+                                                            type="text"
+                                                            placeholder="Registration Plate Number"
+                                                        />
+                                                    </div>
+                                                    <Button
+                                                        type="submit"
+                                                        className={`bg-cws-yellow hover:bg-cws-yellow/90 w-full`}
+                                                    >
+                                                        Continue Booking
+                                                    </Button>
+                                                </CWSForm>
+                                            </ModalHeader>
+                                        </ModalContent>
+                                    </Modal>
                                 </div>
                             </div>
                         </div>

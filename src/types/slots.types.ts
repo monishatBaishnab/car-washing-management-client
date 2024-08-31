@@ -11,6 +11,7 @@ export type TSlot = {
     createdAt: string;
     updatedAt: string;
 };
+
 export type TTimeSlot = {
     _id: string;
     startTime: string;
