@@ -7,9 +7,15 @@ import FeaturedServiceCard from "../../components/ui/FeaturedServiceCard";
 import { Parallax } from "react-parallax";
 import { Envelope } from "phosphor-react";
 import UserReview from "../../components/module/userReciew/UserReview";
+import { useFetchAllServicesQuery } from "../../redux/features/services/services.api";
+import { TService } from "../../types";
 
 const Home = () => {
     const navigate = useNavigate();
+    const { data: featuredServices } = useFetchAllServicesQuery([
+        { name: "featured", value: true },
+    ]);
+
     return (
         <>
             {/* Hero Section */}
@@ -51,7 +57,10 @@ const Home = () => {
                     />
                     <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-10">
                         {ourDetails?.map((data) => (
-                            <div key={data?.title} className="p-6 bg-slate-100 space-y-3 transition-all outline-slate-200 shadow-slate-200 hover:outline hover:shadow-lg">
+                            <div
+                                key={data?.title}
+                                className="p-6 bg-slate-100 space-y-3 transition-all outline-slate-200 shadow-slate-200 hover:outline hover:shadow-lg"
+                            >
                                 <div className="p-3 bg-cws-yellow inline-block">
                                     <img src={data.image} alt={data.title} />
                                 </div>
@@ -78,7 +87,9 @@ const Home = () => {
                         }
                     />
                     <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-10">
-                        <FeaturedServiceCard />
+                        {featuredServices?.data?.map((service:TService) => (
+                            <FeaturedServiceCard service={service} key={service._id} />
+                        ))}
                     </div>
                 </div>
             </section>

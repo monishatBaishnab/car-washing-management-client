@@ -15,7 +15,7 @@ const clientViewConfig = [
         element: <Services />,
     },
     {
-        path: "/bookings/serviceId",
+        path: "/services/:serviceId",
         element: <ServicesDetails />,
     },
     {

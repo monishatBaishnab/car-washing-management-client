@@ -16,7 +16,16 @@ const serviceApi = baseApi.injectEndpoints({
                 };
             },
         }),
+        fetchSingleServices: builder.query({
+            providesTags: (_result, _err, id) => [{ type: "services", id }],
+            query: (id: string) => {
+                return {
+                    url: `/services/${id}`,
+                    method: "GET",
+                };
+            },
+        }),
     }),
 });
 
-export const { useFetchAllServicesQuery } = serviceApi;
+export const { useFetchAllServicesQuery, useFetchSingleServicesQuery } = serviceApi;

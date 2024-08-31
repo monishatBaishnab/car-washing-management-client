@@ -2,8 +2,10 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 import { GiDuration } from "react-icons/gi";
 import { TbCoinTakaFilled } from "react-icons/tb";
 import { TService } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 const DetailsServiceCard = ({ service }: { service: TService }) => {
+    const navigate = useNavigate();
     return (
         <div className="bg-white p-4 border border-slate-200">
             <div className="w-full h-60 sm:h-40 overflow-hidden">
@@ -31,7 +33,10 @@ const DetailsServiceCard = ({ service }: { service: TService }) => {
                 </div>
                 <h4 className="text-lg font-semibold">{service?.name}</h4>
                 <p className="text-slate-700">{service?.description}</p>
-                <button className="text-cws-yellow flex items-center gap-2">
+                <button
+                    onClick={() => navigate(`/services/${service?._id}`)}
+                    className="text-cws-yellow flex items-center gap-2"
+                >
                     Book Service <FaLongArrowAltRight className="mt-1" />
                 </button>
             </div>
