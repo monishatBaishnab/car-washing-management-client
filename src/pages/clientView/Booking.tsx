@@ -18,11 +18,21 @@ const Booking = () => {
     const navigate = useNavigate();
     const [createBooking, { isLoading }] = useCreateBookingMutation();
     const { bookingData, serviceData } = useAppSelector((state) => state.bookings);
+    const cUser = useAppSelector((state) => state.auth.user);
 
     const handleBooking: SubmitHandler<FieldValues> = async (data) => {
-        console.log(data);
+        const { fName, lName, email, mobile, address } = data ?? {};
+        const customerInfo = {
+            name: fName + " " + lName,
+            email,
+            mobile,
+            address,
+        };
         try {
-            const res = await createBooking(bookingData as TBooking).unwrap();
+            const res = await createBooking({
+                ...bookingData,
+                customer: customerInfo,
+            } as TBooking).unwrap();
             if (!res?.success) {
                 toast.error("Failed to booking this service.");
             }
@@ -31,10 +41,11 @@ const Booking = () => {
             }
             if (res.data) {
                 toast.success("Successfully booked this service.");
+                window.location.href = res?.data?.payment_url;
             }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error("Failed to booking this service");
+            console.log(error);
         }
     };
     return (
@@ -57,7 +68,7 @@ const Booking = () => {
             </section>
 
             <section className="bg-slate-100">
-                <div className="container grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="container !pt-0 grid grid-cols-1 md:grid-cols-3 gap-10">
                     <div className="md:col-span-2">
                         <div className="bg-white p-4 shadow-sm border border-slate-100 rounded-lg space-y-5">
                             <div className="bg-white p-4 border border-slate-200 flex items-center gap-5">
@@ -96,7 +107,17 @@ const Booking = () => {
                                 <h4 className="text-lg font-bold text-slate-800 mb-3">
                                     Enter Your Details for Booking
                                 </h4>
-                                <CWSForm resolver={zodResolver(userInfoSchema)} onSubmit={handleBooking}>
+                                <CWSForm
+                                    defaultValues={{
+                                        fName: "John",
+                                        lName: "Doe",
+                                        email: cUser?.email,
+                                        mobile: "123-456-7890",
+                                        address: "123 Main St, Springfield, IL",
+                                    }}
+                                    resolver={zodResolver(userInfoSchema)}
+                                    onSubmit={handleBooking}
+                                >
                                     <div className="space-y-4">
                                         <div className="grid grid-cols-2 gap-5">
                                             <CWSInput
@@ -126,12 +147,12 @@ const Booking = () => {
                                                 placeholder="Write your mobile no"
                                             />
                                         </div>
-                                            <CWSInput
-                                                type="text"
-                                                name="address"
-                                                label="Address"
-                                                placeholder="Write your present address"
-                                            />
+                                        <CWSInput
+                                            type="text"
+                                            name="address"
+                                            label="Address"
+                                            placeholder="Write your present address"
+                                        />
                                         <Button
                                             type="submit"
                                             className={`bg-cws-yellow hover:bg-cws-yellow/90 min-w-56 ${
@@ -178,6 +199,7 @@ const Booking = () => {
                     </div>
                 </div>
             </section>
+
         </>
     );
 };

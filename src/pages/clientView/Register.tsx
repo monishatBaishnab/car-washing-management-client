@@ -45,7 +45,7 @@ const Register = () => {
                     resolver={zodResolver(registerSchema)}
                     defaultValues={{
                         name: "Tech Guru",
-                        email: "support@df-euru.com",
+                        email: "support@gg-guru.com",
                         password: "tg-password",
                         phone: "0987654321",
                         address: "456 Elm Street, Town, Country",

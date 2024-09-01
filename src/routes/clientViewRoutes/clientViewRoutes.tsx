@@ -20,7 +20,12 @@ const clientViewConfig = [
     },
     {
         path: "/bookings",
-        label: "Bookings",
+        // label: "Bookings",
+        element: <Booking />,
+    },
+    {
+        path: "/my-bookings",
+        label: "My Bookings",
         element: <Booking />,
     },
 ];
