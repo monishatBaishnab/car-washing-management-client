@@ -1,15 +1,15 @@
 import AdminProfile from "../../pages/dashboardView/admin/AdminProfile";
-import UserProfile from "../../pages/dashboardView/user/UserProfile";
+import UserDashboard from "../../pages/dashboardView/user/UserDashboard";
 
 const dashboardViewConfig = [
     {
-        path: "user/profile",
-        label: "Profile",
-        element: <UserProfile />,
+        path: "user/",
+        label: "Dashboard",
+        element: <UserDashboard />,
     },
     {
-        path: "admin/profile",
-        label: "Profile",
+        path: "admin/",
+        label: "Dashboard",
         element: <AdminProfile />,
     },
 ];

@@ -16,7 +16,7 @@ const dashboardRouteGenerator = (config: TConfig[], role?: string): TRoute[] => 
         .map((item) => {
             const pathSegments = item.path?.split("/") || [];
             const route: TRoute = { element: item.element };
-
+            console.log(pathSegments);
             if (pathSegments.length === 0 || pathSegments[0] === "") {
                 route.index = true;
             } else {

@@ -2,6 +2,12 @@ import { baseApi } from "../../baseApi";
 
 const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        fetchUserInfo: builder.query({
+            query: (email) => ({
+                url: `auth/${email}`,
+                method: "GET",
+            }),
+        }),
         register: builder.mutation({
             query: (payload) => ({
                 url: "/auth/register",
@@ -26,4 +32,4 @@ const authApi = baseApi.injectEndpoints({
 });
 
 // Export the generated hooks
-export const { useLoginMutation, useRegisterMutation, useCreateAdminMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useCreateAdminMutation, useFetchUserInfoQuery } = authApi;
