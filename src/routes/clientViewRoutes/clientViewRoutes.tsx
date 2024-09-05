@@ -10,22 +10,16 @@ const clientViewConfig = [
         element: <Home />,
     },
     {
-        path: "/services",
+        path: "services",
         label: "Services",
         element: <Services />,
     },
     {
-        path: "/services/:serviceId",
+        path: "services/:serviceId",
         element: <ServicesDetails />,
     },
     {
-        path: "/bookings",
-        // label: "Bookings",
-        element: <Booking />,
-    },
-    {
-        path: "/my-bookings",
-        label: "My Bookings",
+        path: "bookings",
         element: <Booking />,
     },
 ];

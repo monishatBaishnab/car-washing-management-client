@@ -17,7 +17,6 @@ const routeGenerator = (config: TConfig[]) => {
         }
         return route;
     });
-
     return routes;
 };
 

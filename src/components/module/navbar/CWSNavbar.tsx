@@ -4,21 +4,22 @@ import navLinksGenerator from "../../../utils/navLinksGenerator";
 import clientViewConfig from "../../../routes/clientViewRoutes/clientViewRoutes";
 import { LuShoppingCart } from "react-icons/lu";
 import { Button } from "keep-react";
-import { FaBars,} from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { GoDot } from "react-icons/go";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { logOut } from "../../../redux/features/auth/authSlice";
+import { MdSpaceDashboard } from "react-icons/md";
 
 const navLinks = navLinksGenerator(clientViewConfig);
-
+    console.log(navLinks);
 const CWSNavbar = () => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
     const [scroll, setScroll] = useState(false);
     const navigate = useNavigate();
-    
+
     const handleLoginOut = () => {
         if (user === null) {
             return navigate("/login");
@@ -103,18 +104,18 @@ const CWSNavbar = () => {
                         </div>
                         <div className="flex items-center gap-2">
                             <Button
-                                shape="icon"
-                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow  text-2xl hidden sm:flex"
-                            >
-                                <LuShoppingCart />
-                            </Button>
-
-                            <Button
                                 onClick={() => setIsNavbarVisible((prev) => !prev)}
                                 shape="icon"
                                 className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow md:hidden"
                             >
                                 <FaBars />
+                            </Button>
+                            <Button
+                                shape="icon"
+                                onClick={() => navigate('/dashboard')}
+                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex"
+                            >
+                                <MdSpaceDashboard className="text-xl" />
                             </Button>
                             <Button
                                 onClick={handleLoginOut}
