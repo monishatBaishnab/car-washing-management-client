@@ -1,7 +1,10 @@
 import Countdown from "react-countdown";
 import { RxDot } from "react-icons/rx";
 import { useAppSelector } from "../../../redux/hooks";
-import { useFetchUserInfoQuery } from "../../../redux/features/auth/auth.api";
+import {
+    useFetchUserInfoQuery,
+    useUpdateProfileMutation,
+} from "../../../redux/features/auth/auth.api";
 import {
     Badge,
     Button,
@@ -13,6 +16,7 @@ import {
     ModalTitle,
     TableCell,
     TableRow,
+    toast,
 } from "keep-react";
 import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
@@ -38,9 +42,10 @@ type TCounter = {
 
 const UserDashboard = () => {
     const navigate = useNavigate();
+    const [updateProfile, { isLoading: isPULoading }] = useUpdateProfileMutation();
     const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
     const user = useAppSelector((state) => state.auth.user);
-    const { data: userInfo, isLoading } = useFetchUserInfoQuery(user?.email);
+    const { data: userInfo } = useFetchUserInfoQuery(user?.email);
     const {
         data: upcomingBookings,
         isLoading: isUCBLoading,
@@ -110,9 +115,24 @@ const UserDashboard = () => {
             paymentStatus: booking?.paymentStatus,
         }));
     }
-    
+
     const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log(data);
+        try {
+            const res = await updateProfile({ id: userInfo?.data?._id, data }).unwrap();
+            if (!res?.success) {
+                toast.error("Failed to update profile");
+            }
+            if (res.error) {
+                toast.error("Failed to update profile.");
+            }
+            if (res.data) {
+                toast.success("Profile updated successfully.");
+                setIsUpdateModalVisible(false);
+            }
+        } catch (error) {
+            toast.error("Failed to update profile.");
+            console.log(error);
+        }
     };
 
     return (
@@ -235,12 +255,7 @@ const UserDashboard = () => {
                             <ModalTitle className="mb-5">Update Profile</ModalTitle>
                             <ModalDescription>
                                 <CWSForm
-                                    defaultValues={{
-                                        name: "Tech Guru",
-                                        email: "support@gg-guru.com",
-                                        phone: "0987654321",
-                                        address: "456 Elm Street, Town, Country",
-                                    }}
+                                    defaultValues={userInfo?.data ?? {}}
                                     onSubmit={handleSubmit}
                                 >
                                     <div className="space-y-3">
@@ -268,12 +283,12 @@ const UserDashboard = () => {
                                         <Button
                                             type="submit"
                                             className={`bg-cws-yellow hover:bg-cws-yellow/90 w-full ${
-                                                isLoading
+                                                isPULoading
                                                     ? "bg-cws-yellow/65 hover:bg-cws-yellow/65"
                                                     : "bg-cws-yellow"
                                             }`}
                                         >
-                                            {isLoading ? (
+                                            {isPULoading ? (
                                                 <CgSpinnerTwo className="animate-spin text-white text-2xl" />
                                             ) : (
                                                 "Update"
