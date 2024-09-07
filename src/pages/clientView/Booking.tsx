@@ -18,7 +18,7 @@ const Booking = () => {
     const navigate = useNavigate();
     const [createBooking, { isLoading }] = useCreateBookingMutation();
     const { bookingData, serviceData } = useAppSelector((state) => state.bookings);
-    const cUser = useAppSelector((state) => state.auth.user);
+    const cUser = useAppSelector((state) => state.auth?.user);
 
     const handleBooking: SubmitHandler<FieldValues> = async (data) => {
         const { fName, lName, email, mobile, address } = data ?? {};

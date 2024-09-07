@@ -1,3 +1,6 @@
+import { TService } from "./services.types";
+import { TSlot } from "./slots.types";
+
 export type TCustomer = {
     name: string;
     email: string;
@@ -6,16 +9,18 @@ export type TCustomer = {
 };
 
 export type TBooking = {
+    _id: string;
     customer: TCustomer;
-    serviceId: string;
-    slotId: string;
+    service: TService;
+    slot: TSlot;
     vehicleType: string;
     vehicleBrand: string;
     vehicleModel: string;
     manufacturingYear: number;
     registrationPlate: string;
-    __v?: number;
-    createdAt?: string;
-    updatedAt?: string;
-    _id?: string;
+    transactionId: string;
+    paymentStatus: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
 };

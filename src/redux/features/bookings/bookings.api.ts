@@ -9,9 +9,24 @@ const bookingApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            invalidatesTags: (_result, _error, data) => [{ type: "services", id: data.serviceId }],
+            invalidatesTags: (_result, _error, data) => [
+                { type: "services", id: data?.service?._id },
+            ],
+        }),
+        fetchUpcomingBookings: builder.query({
+            query: () => ({
+                url: "/bookings/upcoming",
+                method: "GET",
+            }),
+        }),
+        fetchMyBookings: builder.query({
+            query: () => ({
+                url: "/bookings/my-bookings",
+                method: "GET",
+            }),
         }),
     }),
 });
 
-export const { useCreateBookingMutation } = bookingApi;
+export const { useCreateBookingMutation, useFetchUpcomingBookingsQuery, useFetchMyBookingsQuery } =
+    bookingApi;

@@ -3,6 +3,7 @@ import { RxDot } from "react-icons/rx";
 import { useAppSelector } from "../../../redux/hooks";
 import { useFetchUserInfoQuery } from "../../../redux/features/auth/auth.api";
 import {
+    Badge,
     Button,
     Modal,
     ModalClose,
@@ -20,62 +21,12 @@ import CWSInput from "../../../components/forms/CWSInput";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { CgSpinnerTwo } from "react-icons/cg";
 import CWSTable from "../../../components/ui/CWSTable";
+import { useFetchUpcomingBookingsQuery } from "../../../redux/features/bookings/bookings.api";
+import { TBooking } from "../../../types";
+import { formatDate } from "../../../utils/formatDate";
+import { useNavigate } from "react-router-dom";
 
-const tableData = [
-    {
-        id: 1,
-        fileName: "image1.jpg",
-        fileFormat: "JPG",
-        ratio: "16:9",
-        resolution: "1920x1080",
-        fileSize: "1.2MB",
-        status: "Processed",
-    },
-    {
-        id: 2,
-        fileName: "video1.mp4",
-        fileFormat: "MP4",
-        ratio: "4:3",
-        resolution: "1280x720",
-        fileSize: "24MB",
-        status: "Uploaded",
-    },
-    {
-        id: 3,
-        fileName: "document1.pdf",
-        fileFormat: "PDF",
-        ratio: "A4",
-        resolution: "210x297mm",
-        fileSize: "500KB",
-        status: "Pending",
-    },
-    {
-        id: 4,
-        fileName: "image2.png",
-        fileFormat: "PNG",
-        ratio: "1:1",
-        resolution: "800x800",
-        fileSize: "900KB",
-        status: "Failed",
-    },
-    {
-        id: 5,
-        fileName: "presentation.pptx",
-        fileFormat: "PPTX",
-        ratio: "16:10",
-        resolution: "1440x900",
-        fileSize: "5MB",
-        status: "Processed",
-    },
-];
-const tableHeaders = [
-    "File Name",
-    "File Format",
-    "Aspect Ratio",
-    "Resolution",
-    "File Size",
-    "Status",
-];
+const tableHeaders = ["Service", "Payment Status", "Date", "Remaining Time"];
 
 type TCounter = {
     days: number;
@@ -86,10 +37,16 @@ type TCounter = {
 };
 
 const UserDashboard = () => {
+    const navigate = useNavigate();
     const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
     const user = useAppSelector((state) => state.auth.user);
     const { data: userInfo, isLoading } = useFetchUserInfoQuery(user?.email);
-    console.log(userInfo);
+    const {
+        data: upcomingBookings,
+        isLoading: isUCBLoading,
+        isError: isUCBError,
+    } = useFetchUpcomingBookingsQuery(undefined);
+
     const renderer = ({ days, hours, minutes, seconds, completed }: TCounter) => {
         if (completed) {
             return;
@@ -142,7 +99,18 @@ const UserDashboard = () => {
             );
         }
     };
+    let tableData: Record<string, string>[] = [];
 
+    if (!isUCBError && !isUCBLoading) {
+        tableData = upcomingBookings?.data?.map((booking: TBooking) => ({
+            id: booking?._id,
+            serviceName: booking?.service?.name,
+            date: booking?.slot?.date,
+            startTime: booking?.slot?.startTime,
+            paymentStatus: booking?.paymentStatus,
+        }));
+    }
+    
     const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
         console.log(data);
     };
@@ -167,6 +135,7 @@ const UserDashboard = () => {
                             alt="User Profile"
                         />
                     </div>
+
                     <div>
                         <h2 className="text-3xl text-slate-900 font-semibold mb-4">
                             {userInfo?.data?.name}
@@ -200,23 +169,61 @@ const UserDashboard = () => {
                         </div>
                     </div>
                 </div>
-                <Countdown date={new Date("2024-10-05T11:24:00").getTime()} renderer={renderer} />
+
+                {!isUCBLoading && upcomingBookings?.data?.length > 0 ? (
+                    <Countdown
+                        date={new Date(`${tableData[0]?.date}T${tableData[0]?.startTime}`)}
+                        renderer={renderer}
+                    />
+                ) : null}
             </div>
             <div className="mt-5">
-                <h3 className="text-slate-900 text-2xl font-semibold mb-4">My Bookings</h3>
+                <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-slate-900 text-2xl font-bold">My Bookings</h3>
+                    <Button
+                        onClick={() => navigate("/dashboard/user/bookings")}
+                        className="bg-cws-yellow hover:bg-cws-yellow/80 active:bg-cws-yellow"
+                    >
+                        See All Bookings
+                    </Button>
+                </div>
                 <CWSTable headers={tableHeaders}>
-                    {tableData.map((item) => (
-                        <TableRow key={item.id}>
-                            <TableCell>
-                                <div className="max-w-[250px] truncate">{item.fileName}</div>
-                            </TableCell>
-                            <TableCell>{item.fileFormat}</TableCell>
-                            <TableCell>{item.ratio}</TableCell>
-                            <TableCell>{item.resolution}</TableCell>
-                            <TableCell>{item.fileSize}</TableCell>
-                            <TableCell>{item.status}</TableCell>
-                        </TableRow>
-                    ))}
+                    {tableData?.length > 0 && !isUCBLoading
+                        ? tableData.map((item) => (
+                              <TableRow key={item.id}>
+                                  <TableCell>{item.serviceName}</TableCell>
+                                  <TableCell>
+                                      <Badge
+                                          color={
+                                              item?.paymentStatus === "completed"
+                                                  ? "success"
+                                                  : item?.paymentStatus === "pending"
+                                                  ? "warning"
+                                                  : "error"
+                                          }
+                                      >
+                                          {item.paymentStatus}
+                                      </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                      {formatDate(`${item.date} ${item.startTime}`)}
+                                  </TableCell>
+                                  <TableCell>
+                                      <Countdown
+                                          date={new Date(`${item?.date}T${item.startTime}`)}
+                                      />
+                                  </TableCell>
+                              </TableRow>
+                          ))
+                        : Array.from({ length: 4 })?.map((_, id) => (
+                              <TableRow key={id} className="animate-pulse">
+                                  {Array.from({ length: 4 }).map((_, id) => (
+                                      <TableCell key={id}>
+                                          <div className="w-full bg-slate-100 h-10"> </div>
+                                      </TableCell>
+                                  ))}
+                              </TableRow>
+                          ))}
                 </CWSTable>
             </div>
 

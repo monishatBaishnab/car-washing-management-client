@@ -30,7 +30,7 @@ const Services = () => {
     const [sort, setSort] = useState("");
     const [search, setSearch] = useState("");
     const [priceRange, setPriceRange] = useState<number[] | []>([0, 1000]);
-    const { data: services } = useFetchAllServicesQuery([
+    const { data: services, isLoading: isServiceLoading } = useFetchAllServicesQuery([
         { name: "name", value: search },
         { name: "priceRange", value: priceRange },
         { name: "sort", value: sort },
@@ -143,15 +143,7 @@ const Services = () => {
                                 </div>
                             </div>
                         </div>
-                        {services?.data?.length > 0 ? (
-                            <div className="md:col-span-2 gap-5 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                                {services?.data?.map((service: TService) => (
-                                    <div key={service._id}>
-                                        <DetailsServiceCard service={service} />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
+                        {services?.data?.length < 1 && !isServiceLoading ? (
                             <div className="col-span-3">
                                 <Empty>
                                     <EmptyImage>
@@ -172,6 +164,33 @@ const Services = () => {
                                         again soon!
                                     </EmptyDescription>
                                 </Empty>
+                            </div>
+                        ) : (
+                            <div className="md:col-span-2 gap-5 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                                {isServiceLoading
+                                    ? Array.from({ length: 6 })?.map((_, id) => (
+                                          <div
+                                              key={id}
+                                              className="bg-white space-y-2 w-full h-full animate-pulse p-5 border border-slate-200"
+                                          >
+                                              <div className="w-full h-60 sm:h-40 bg-gray-100"></div>
+                                              <div className="flex items-center gap-2 w-1/2">
+                                                  <div className="w-full h-5 bg-gray-100"></div>
+                                                  <div className="w-full h-5 bg-gray-100"></div>
+                                              </div>
+                                              <div className="w-full h-7 bg-gray-100"></div>
+                                              <div className="space-y-1">
+                                                  <div className="w-full h-3 bg-gray-100"></div>
+                                                  <div className="w-full h-3 bg-gray-100"></div>
+                                                  <div className="w-full h-3 bg-gray-100"></div>
+                                              </div>
+                                          </div>
+                                      ))
+                                    : services?.data?.map((service: TService) => (
+                                          <div key={service._id}>
+                                              <DetailsServiceCard service={service} />
+                                          </div>
+                                      ))}
                             </div>
                         )}
                     </div>

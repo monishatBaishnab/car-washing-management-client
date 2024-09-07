@@ -12,7 +12,7 @@ import { logOut } from "../../../redux/features/auth/authSlice";
 import { MdSpaceDashboard } from "react-icons/md";
 
 const navLinks = navLinksGenerator(clientViewConfig);
-    console.log(navLinks);
+console.log(navLinks);
 const CWSNavbar = () => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
@@ -112,8 +112,10 @@ const CWSNavbar = () => {
                             </Button>
                             <Button
                                 shape="icon"
-                                onClick={() => navigate('/dashboard')}
-                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex"
+                                onClick={() => navigate(`/dashboard/${user?.role}`)}
+                                className={`px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex ${
+                                    !user?.role ? "!hidden" : "flex"
+                                }`}
                             >
                                 <MdSpaceDashboard className="text-xl" />
                             </Button>
