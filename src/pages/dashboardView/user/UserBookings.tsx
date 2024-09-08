@@ -2,7 +2,7 @@ import Countdown from "react-countdown";
 import { Badge, TableCell, TableRow } from "keep-react";
 import CWSTable from "../../../components/ui/CWSTable";
 import { useFetchMyBookingsQuery } from "../../../redux/features/bookings/bookings.api";
-import { TBooking } from "../../../types";
+import { TBooking, TFormattedBooking } from "../../../types";
 import { formatDate } from "../../../utils/formatDate";
 
 const tableHeaders = ["Service", "Payment Status", "Date", "Remaining Time"];
@@ -14,7 +14,7 @@ const UserBookings = () => {
         isError: isUCBError,
     } = useFetchMyBookingsQuery(undefined);
 
-    let tableData: Record<string, string>[] = [];
+    let tableData: TFormattedBooking[] = [];
 
     if (!isUCBError && !isUCBLoading) {
         tableData = upcomingBookings?.data?.map((booking: TBooking) => ({
@@ -30,7 +30,7 @@ const UserBookings = () => {
         <>
             <h4 className="text-center text-2xl mb-5 font-bold">My Bookings</h4>
             <div>
-                <CWSTable isLoading={isUCBLoading} headers={tableHeaders}>
+                <CWSTable data={tableData} isLoading={isUCBLoading} headers={tableHeaders}>
                     {tableData.map((item) => (
                         <TableRow key={item.id}>
                             <TableCell>{item.serviceName}</TableCell>

@@ -1,6 +1,6 @@
 import Countdown from "react-countdown";
 import { RxDot } from "react-icons/rx";
-import { TFormattedBooking } from "../../../pages/dashboardView/user/UserDashboard";
+import { TFormattedBooking } from "../../../types";
 
 type TCounter = {
     days: number;
@@ -15,12 +15,16 @@ const CountdownTimer = ({
     data,
 }: {
     isLoading?: boolean;
-    booking: TFormattedBooking;
     data: TFormattedBooking[];
 }) => {
-    if(isLoading){
-        return <div className="w-full h-[210px] bg-gray-100 animate-pulse rounded"></div>
+    if (isLoading) {
+        return <div className="w-full h-[210px] bg-gray-100 animate-pulse rounded"></div>;
     }
+
+    if (!data?.length) {
+        return;
+    }
+
     const booking = data?.[0];
     const renderer = ({ days, hours, minutes, seconds, completed }: TCounter) => {
         if (completed) {
@@ -45,7 +49,7 @@ const CountdownTimer = ({
             );
         }
     };
-    
+
     return (
         <Countdown date={new Date(`${booking?.date}T${booking?.startTime}`)} renderer={renderer} />
     );

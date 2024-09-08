@@ -24,3 +24,11 @@ export type TBooking = {
     updatedAt: string;
     __v: number;
 };
+
+export type TFormattedBooking = {
+    id: string;
+    serviceName: string | null;
+    date: string | null;
+    startTime: string | null;
+    paymentStatus: "pending" | "completed" | "failed";
+};
