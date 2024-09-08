@@ -3,6 +3,20 @@ import { baseApi } from "../../baseApi";
 
 const bookingApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        fetchAllBookings: builder.query({
+            providesTags: ["bookings"],
+            query: (data: Record<string, unknown>[] | undefined) => {
+                const params = new URLSearchParams();
+                if (data && data?.length > 0) {
+                    data.forEach((item) => params.append(String(item?.name), String(item?.value)));
+                }
+                return {
+                    url: "/bookings",
+                    method: "GET",
+                    params,
+                };
+            },
+        }),
         createBooking: builder.mutation({
             query: (data: TBooking) => ({
                 url: "/bookings",
@@ -28,5 +42,5 @@ const bookingApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useCreateBookingMutation, useFetchUpcomingBookingsQuery, useFetchMyBookingsQuery } =
+export const { useCreateBookingMutation, useFetchUpcomingBookingsQuery, useFetchMyBookingsQuery, useFetchAllBookingsQuery } =
     bookingApi;

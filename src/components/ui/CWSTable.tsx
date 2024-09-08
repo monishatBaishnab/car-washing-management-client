@@ -1,17 +1,16 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "keep-react";
 import { ReactNode } from "react";
 import empty_image from "../../assets/images/empty-bookings.svg";
-import { TFormattedBooking } from "../../types";
 
 type TCWSTableProps = {
     headers: string[];
     children: ReactNode;
     isLoading: boolean;
-    data?: TFormattedBooking[];
+    data?: unknown[];
 };
 
 const CWSTable = ({ headers, children, isLoading, data }: TCWSTableProps) => {
-    if (data && !data?.length) {
+    if (data && !data?.length && !isLoading) {
         return (
             <div>
                 <div
@@ -25,7 +24,11 @@ const CWSTable = ({ headers, children, isLoading, data }: TCWSTableProps) => {
                 </div>
                 <div className="flex items-center flex-col p-5">
                     <div className="w-44 h-32 overflow-hidden">
-                        <img className="w-full h-full object-contain" src={empty_image} alt="Empty Image" />
+                        <img
+                            className="w-full h-full object-contain"
+                            src={empty_image}
+                            alt="Empty Image"
+                        />
                     </div>
                     <h3 className="text-2xl text-slate-500 font-bold">No Data Found</h3>
                 </div>
