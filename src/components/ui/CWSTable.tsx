@@ -1,7 +1,13 @@
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "keep-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "keep-react";
 import { ReactNode } from "react";
 
-const CWSTable = ({ headers, children }: { headers: string[]; children: ReactNode }) => {
+type TCWSTableProps = {
+    headers: string[];
+    children: ReactNode;
+    isLoading: boolean;
+};
+
+const CWSTable = ({ headers, children, isLoading }: TCWSTableProps) => {
     return (
         <Table className="rounded-none">
             <TableHeader>
@@ -11,7 +17,19 @@ const CWSTable = ({ headers, children }: { headers: string[]; children: ReactNod
                     ))}
                 </TableRow>
             </TableHeader>
-            <TableBody>{children}</TableBody>
+            <TableBody>
+                {!isLoading
+                    ? children
+                    : Array.from({ length: 4 })?.map((_, id) => (
+                          <TableRow key={id} className="animate-pulse">
+                              {Array.from({ length: headers?.length }).map((_, id) => (
+                                  <TableCell key={id}>
+                                      <div className="w-full bg-slate-100 h-10"> </div>
+                                  </TableCell>
+                              ))}
+                          </TableRow>
+                      ))}
+            </TableBody>
         </Table>
     );
 };

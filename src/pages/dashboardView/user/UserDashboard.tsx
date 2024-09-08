@@ -1,5 +1,4 @@
 import Countdown from "react-countdown";
-import { RxDot } from "react-icons/rx";
 import { useAppSelector } from "../../../redux/hooks";
 import {
     useFetchUserInfoQuery,
@@ -8,36 +7,29 @@ import {
 import {
     Badge,
     Button,
-    Modal,
-    ModalClose,
-    ModalContent,
-    ModalDescription,
-    ModalHeader,
-    ModalTitle,
     TableCell,
     TableRow,
     toast,
 } from "keep-react";
-import { FaEdit } from "react-icons/fa";
 import { useState } from "react";
-import CWSForm from "../../../components/forms/CWSForm";
-import CWSInput from "../../../components/forms/CWSInput";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { CgSpinnerTwo } from "react-icons/cg";
 import CWSTable from "../../../components/ui/CWSTable";
 import { useFetchUpcomingBookingsQuery } from "../../../redux/features/bookings/bookings.api";
 import { TBooking } from "../../../types";
 import { formatDate } from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
+import UserProfile from "../../../components/ui/UserProfile";
+import CountdownTimer from "../../../components/module/userDashboard/CountdownTimer";
+import UserProfileUpdate from "../../../components/ui/UserProfileUpdate";
 
 const tableHeaders = ["Service", "Payment Status", "Date", "Remaining Time"];
 
-type TCounter = {
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-    completed: boolean;
+export type TFormattedBooking = {
+    id: string;
+    serviceName: string | null;
+    date: string | null;
+    startTime: string | null;
+    paymentStatus: "pending" | "completed" | "failed";
 };
 
 const UserDashboard = () => {
@@ -45,66 +37,14 @@ const UserDashboard = () => {
     const [updateProfile, { isLoading: isPULoading }] = useUpdateProfileMutation();
     const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
     const user = useAppSelector((state) => state.auth.user);
-    const { data: userInfo } = useFetchUserInfoQuery(user?.email);
+    const { data: userInfo, isLoading: isUserLoading } = useFetchUserInfoQuery(user?.email);
     const {
         data: upcomingBookings,
         isLoading: isUCBLoading,
         isError: isUCBError,
     } = useFetchUpcomingBookingsQuery(undefined);
 
-    const renderer = ({ days, hours, minutes, seconds, completed }: TCounter) => {
-        if (completed) {
-            return;
-        } else {
-            const formatNumber = (num: number) => String(num).padStart(2, "0");
-            return (
-                <div className="flex items-center justify-center flex-col  space-y-5 !mt-0 !pt-0">
-                    <h2 className="text-xl sm:text-3xl text-cws-yellow uppercase font-bold">
-                        Next Service Starts Soon...
-                    </h2>
-                    <div className="flex items-center gap-3">
-                        <div className="text-center">
-                            <h6 className="text-lg text-gray-500 uppercase">Days</h6>
-                            <h2 className="text-3xl sm:text-5xl text-gray-700">
-                                {formatNumber(days)}
-                            </h2>
-                        </div>
-                        <div className="flex items-center justify-center flex-col h-full w-full">
-                            <RxDot className="text-lg text-gray-700" />
-                            <RxDot className="text-lg text-gray-700" />
-                        </div>
-                        <div className="text-center">
-                            <h6 className="text-lg text-gray-500 uppercase">Hours</h6>
-                            <h2 className="text-3xl sm:text-5xl text-gray-700">
-                                {formatNumber(hours)}
-                            </h2>
-                        </div>
-                        <div className="items-center justify-center flex-col h-full w-full hidden md:flex">
-                            <RxDot className="text-lg text-gray-700" />
-                            <RxDot className="text-lg text-gray-700" />
-                        </div>
-                        <div className="text-center hidden md:block">
-                            <h6 className="text-lg text-gray-500 uppercase">Minutes</h6>
-                            <h2 className="text-3xl sm:text-5xl text-gray-700">
-                                {formatNumber(minutes)}
-                            </h2>
-                        </div>
-                        <div className="flex items-center justify-center flex-col h-full w-full">
-                            <RxDot className="text-lg text-gray-700" />
-                            <RxDot className="text-lg text-gray-700" />
-                        </div>
-                        <div className="text-center">
-                            <h6 className="text-lg text-gray-500 uppercase">Seconds</h6>
-                            <h2 className="text-3xl sm:text-5xl text-gray-700">
-                                {formatNumber(seconds)}
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-    };
-    let tableData: Record<string, string>[] = [];
+    let tableData: TFormattedBooking[] = [];
 
     if (!isUCBError && !isUCBLoading) {
         tableData = upcomingBookings?.data?.map((booking: TBooking) => ({
@@ -138,68 +78,17 @@ const UserDashboard = () => {
     return (
         <>
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                <div className="bg-cws-yellow/70 p-6 rounded flex items-center gap-8 flex-wrap relative group">
-                    <div className="absolute right-4 top-4 opacity-0 invisible transition-all group-hover:opacity-100 group-hover:visible group-hover:top-5 group-hover:right-5">
-                        <Button
-                            onClick={() => setIsUpdateModalVisible(true)}
-                            shape="icon"
-                            className="bg-white text-slate-800 hover:bg-white"
-                        >
-                            <FaEdit />
-                        </Button>
-                    </div>
-                    <div className="h-40 w-40 overflow-hidden bg-slate-100 rounded-full pt-5">
-                        <img
-                            className="w-full h-full object-contain"
-                            src="/user_profile.png"
-                            alt="User Profile"
-                        />
-                    </div>
+                <UserProfile
+                    isLoading={isUserLoading}
+                    setModalVisible={setIsUpdateModalVisible}
+                    userInfo={userInfo?.data}
+                />
 
-                    <div>
-                        <h2 className="text-3xl text-slate-900 font-semibold mb-4">
-                            {userInfo?.data?.name}
-                        </h2>
-                        <div className="space-x-3 flex">
-                            <div className="inline-flex flex-col gap-y-2">
-                                <span className="inline-block text-slate-700 font-medium">
-                                    Role
-                                </span>
-                                <span className="inline-block text-slate-700 font-medium">
-                                    Email
-                                </span>
-                                <span className="inline-block text-slate-700 font-medium">
-                                    Status
-                                </span>
-                            </div>
-                            <div className="inline-flex flex-col gap-y-2">
-                                <span className="inline-block text-slate-700 font-medium text-nowrap">
-                                    : {userInfo?.data?.role}
-                                </span>
-                                <span className="inline-block text-slate-700 font-medium text-nowrap">
-                                    : {userInfo?.data?.email}
-                                </span>
-                                <span className="inline-block text-slate-700 font-medium text-nowrap">
-                                    :{" "}
-                                    <span className="bg-green-500 px-2 rounded pb-1 text-white">
-                                        Active
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {!isUCBLoading && upcomingBookings?.data?.length > 0 ? (
-                    <Countdown
-                        date={new Date(`${tableData[0]?.date}T${tableData[0]?.startTime}`)}
-                        renderer={renderer}
-                    />
-                ) : null}
+                <CountdownTimer isLoading={isUCBLoading} data={tableData} booking={tableData[0]} />
             </div>
             <div className="mt-5">
                 <div className="mb-4 flex items-center justify-between">
-                    <h3 className="text-slate-900 text-2xl font-bold">My Bookings</h3>
+                    <h3 className="text-slate-900 text-2xl font-bold">Upcoming Bookings</h3>
                     <Button
                         onClick={() => navigate("/dashboard/user/bookings")}
                         className="bg-cws-yellow hover:bg-cws-yellow/80 active:bg-cws-yellow"
@@ -207,100 +96,39 @@ const UserDashboard = () => {
                         See All Bookings
                     </Button>
                 </div>
-                <CWSTable headers={tableHeaders}>
-                    {tableData?.length > 0 && !isUCBLoading
-                        ? tableData.map((item) => (
-                              <TableRow key={item.id}>
-                                  <TableCell>{item.serviceName}</TableCell>
-                                  <TableCell>
-                                      <Badge
-                                          color={
-                                              item?.paymentStatus === "completed"
-                                                  ? "success"
-                                                  : item?.paymentStatus === "pending"
-                                                  ? "warning"
-                                                  : "error"
-                                          }
-                                      >
-                                          {item.paymentStatus}
-                                      </Badge>
-                                  </TableCell>
-                                  <TableCell>
-                                      {formatDate(`${item.date} ${item.startTime}`)}
-                                  </TableCell>
-                                  <TableCell>
-                                      <Countdown
-                                          date={new Date(`${item?.date}T${item.startTime}`)}
-                                      />
-                                  </TableCell>
-                              </TableRow>
-                          ))
-                        : Array.from({ length: 4 })?.map((_, id) => (
-                              <TableRow key={id} className="animate-pulse">
-                                  {Array.from({ length: 4 }).map((_, id) => (
-                                      <TableCell key={id}>
-                                          <div className="w-full bg-slate-100 h-10"> </div>
-                                      </TableCell>
-                                  ))}
-                              </TableRow>
-                          ))}
+                <CWSTable isLoading={isUCBLoading} headers={tableHeaders}>
+                    {tableData.map((item) => (
+                        <TableRow key={item.id}>
+                            <TableCell>{item.serviceName}</TableCell>
+                            <TableCell>
+                                <Badge
+                                    color={
+                                        item?.paymentStatus === "completed"
+                                            ? "success"
+                                            : item?.paymentStatus === "pending"
+                                            ? "warning"
+                                            : "error"
+                                    }
+                                >
+                                    {item.paymentStatus}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>{formatDate(`${item.date} ${item.startTime}`)}</TableCell>
+                            <TableCell>
+                                <Countdown date={new Date(`${item?.date}T${item.startTime}`)} />
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </CWSTable>
             </div>
 
-            <Modal isOpen={isUpdateModalVisible} onOpenChange={setIsUpdateModalVisible}>
-                <ModalContent className="w-96">
-                    <ModalClose className="absolute right-4 top-4" />
-                    <ModalHeader>
-                        <div className="space-y-1">
-                            <ModalTitle className="mb-5">Update Profile</ModalTitle>
-                            <ModalDescription>
-                                <CWSForm
-                                    defaultValues={userInfo?.data ?? {}}
-                                    onSubmit={handleSubmit}
-                                >
-                                    <div className="space-y-3">
-                                        <CWSInput
-                                            type="text"
-                                            name="name"
-                                            placeholder="Write your full name"
-                                        />
-                                        <CWSInput
-                                            type="email"
-                                            name="email"
-                                            placeholder="Write your user name/email"
-                                        />
-                                        <CWSInput
-                                            type="text"
-                                            name="phone"
-                                            placeholder="Write your mobile no"
-                                        />
-                                        <CWSInput
-                                            type="text"
-                                            name="address"
-                                            placeholder="Write your address"
-                                        />
-
-                                        <Button
-                                            type="submit"
-                                            className={`bg-cws-yellow hover:bg-cws-yellow/90 w-full ${
-                                                isPULoading
-                                                    ? "bg-cws-yellow/65 hover:bg-cws-yellow/65"
-                                                    : "bg-cws-yellow"
-                                            }`}
-                                        >
-                                            {isPULoading ? (
-                                                <CgSpinnerTwo className="animate-spin text-white text-2xl" />
-                                            ) : (
-                                                "Update"
-                                            )}
-                                        </Button>
-                                    </div>
-                                </CWSForm>
-                            </ModalDescription>
-                        </div>
-                    </ModalHeader>
-                </ModalContent>
-            </Modal>
+            <UserProfileUpdate
+                handleSubmit={handleSubmit}
+                isLoading={isPULoading}
+                isVisible={isUpdateModalVisible}
+                setVisible={setIsUpdateModalVisible}
+                userInfo={userInfo?.data}
+            />
         </>
     );
 };

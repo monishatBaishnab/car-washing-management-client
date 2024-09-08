@@ -30,43 +30,29 @@ const UserBookings = () => {
         <>
             <h4 className="text-center text-2xl mb-5 font-bold">My Bookings</h4>
             <div>
-                <CWSTable headers={tableHeaders}>
-                    {tableData?.length > 0 && !isUCBLoading
-                        ? tableData.map((item) => (
-                              <TableRow key={item.id}>
-                                  <TableCell>{item.serviceName}</TableCell>
-                                  <TableCell>
-                                      <Badge
-                                          color={
-                                              item?.paymentStatus === "completed"
-                                                  ? "success"
-                                                  : item?.paymentStatus === "pending"
-                                                  ? "warning"
-                                                  : "error"
-                                          }
-                                      >
-                                          {item.paymentStatus}
-                                      </Badge>
-                                  </TableCell>
-                                  <TableCell>
-                                      {formatDate(`${item.date} ${item.startTime}`)}
-                                  </TableCell>
-                                  <TableCell>
-                                      <Countdown
-                                          date={new Date(`${item?.date}T${item.startTime}`)}
-                                      />
-                                  </TableCell>
-                              </TableRow>
-                          ))
-                        : Array.from({ length: 4 })?.map((_, id) => (
-                              <TableRow key={id} className="animate-pulse">
-                                  {Array.from({ length: 4 }).map((_, id) => (
-                                      <TableCell key={id}>
-                                          <div className="w-full bg-slate-100 h-10"> </div>
-                                      </TableCell>
-                                  ))}
-                              </TableRow>
-                          ))}
+                <CWSTable isLoading={isUCBLoading} headers={tableHeaders}>
+                    {tableData.map((item) => (
+                        <TableRow key={item.id}>
+                            <TableCell>{item.serviceName}</TableCell>
+                            <TableCell>
+                                <Badge
+                                    color={
+                                        item?.paymentStatus === "completed"
+                                            ? "success"
+                                            : item?.paymentStatus === "pending"
+                                            ? "warning"
+                                            : "error"
+                                    }
+                                >
+                                    {item.paymentStatus}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>{formatDate(`${item.date} ${item.startTime}`)}</TableCell>
+                            <TableCell>
+                                <Countdown date={new Date(`${item?.date}T${item.startTime}`)} />
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </CWSTable>
             </div>
         </>
