@@ -25,7 +25,18 @@ const serviceApi = baseApi.injectEndpoints({
                 };
             },
         }),
+        createService: builder.mutation({
+            query: (data) => {
+                return {
+                    url: `/services/`,
+                    method: "POST",
+                    body: data,
+                };
+            },
+            invalidatesTags: ["services"],
+        }),
     }),
 });
 
-export const { useFetchAllServicesQuery, useFetchSingleServicesQuery } = serviceApi;
+export const { useFetchAllServicesQuery, useFetchSingleServicesQuery, useCreateServiceMutation } =
+    serviceApi;
