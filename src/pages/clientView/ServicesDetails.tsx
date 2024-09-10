@@ -150,7 +150,8 @@ const ServicesDetails = () => {
                                             key={item._id}
                                             disabled={
                                                 !dateValidator(selectedDate?.value as string) ||
-                                                item.isBooked === "booked"
+                                                item.isBooked === "booked" ||
+                                                item.isBooked === "canceled"
                                             }
                                             onClick={() =>
                                                 handleSelectSlot(

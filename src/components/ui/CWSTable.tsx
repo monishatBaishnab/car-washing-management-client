@@ -41,7 +41,14 @@ const CWSTable = ({ headers, children, isLoading, data }: TCWSTableProps) => {
             <TableHeader>
                 <TableRow>
                     {headers?.map((header) => (
-                        <TableHead key={header}>{header}</TableHead>
+                        <TableHead
+                            className={`${
+                                headers[headers?.length - 1] === header ? "text-right" : ""
+                            }`}
+                            key={header}
+                        >
+                            {header}
+                        </TableHead>
                     ))}
                 </TableRow>
             </TableHeader>

@@ -16,7 +16,27 @@ const slotApi = baseApi.injectEndpoints({
                 };
             },
         }),
+        createSlot: builder.mutation({
+            query: (data) => {
+                return {
+                    url: "/slots",
+                    method: "POST",
+                    body: data,
+                };
+            },
+            invalidatesTags: ["slots"],
+        }),
+        updateSlot: builder.mutation({
+            query: ({ id, isBooked }) => {
+                return {
+                    url: `/slots/${id}`,
+                    method: "PATCH",
+                    body: { isBooked },
+                };
+            },
+            invalidatesTags: ["slots"],
+        }),
     }),
 });
 
-export const { useFetchAllSlotsQuery } = slotApi;
+export const { useFetchAllSlotsQuery, useCreateSlotMutation, useUpdateSlotMutation } = slotApi;
