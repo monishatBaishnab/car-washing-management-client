@@ -18,7 +18,7 @@ const baseQuery = fetchBaseQuery({
 
 export const baseApi = createApi({
     reducerPath: "cws_api",
-    tagTypes: ["user", "services", "bookings", 'slots'],
+    tagTypes: ["user", "services", "bookings", 'slots', 'reviews', 'review-state'],
     baseQuery,
     endpoints: (_builder) => ({}),
 });
