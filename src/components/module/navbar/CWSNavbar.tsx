@@ -10,6 +10,7 @@ import { GoDot } from "react-icons/go";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { logOut } from "../../../redux/features/auth/authSlice";
 import { MdSpaceDashboard } from "react-icons/md";
+import { ArrowUp } from "phosphor-react";
 
 const navLinks = navLinksGenerator(clientViewConfig);
 console.log(navLinks);
@@ -19,6 +20,7 @@ const CWSNavbar = () => {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
     const [scroll, setScroll] = useState(false);
     const navigate = useNavigate();
+    const [isScrollTopVisible, setIsScrollTopVisible] = useState(false);
 
     const handleLoginOut = () => {
         if (user === null) {
@@ -53,83 +55,128 @@ const CWSNavbar = () => {
             });
     }, []);
 
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
+
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 500) {
+                setIsScrollTopVisible(true);
+            } else {
+                setIsScrollTopVisible(false);
+            }
+        });
+
+        return () =>
+            window.removeEventListener("scroll", () => {
+                if (window.scrollY > 300) {
+                    setIsScrollTopVisible(true);
+                } else {
+                    setIsScrollTopVisible(false);
+                }
+            });
+    }, []);
+
     return (
-        <div className={`top-0 left-0 right-0 ${scroll ? "sticky animate-fadeInDown z-50" : ""}`}>
-            <div className="bg-cws-primary-dark relative">
-                <div className="container !py-5 flex items-center justify-between h-24 gap-7">
-                    <div className="w-32">
-                        <Link to="/">
-                            <img src={cws_logo} alt="PWS Logo" />
-                        </Link>
-                    </div>
-                    <div className="flex items-center gap-6">
-                        <div
-                            className={`flex gap-4 flex-col md:flex-row md:items-center absolute bg-cws-primary-light w-60 p-5 right-10 rounded-b-md ${
-                                isNavbarVisible
-                                    ? "top-full visible opacity-100 transition-all"
-                                    : "top-20 invisible opacity-0"
-                            } md:static md:bg-transparent md:rounded-b-none md:w-auto md:opacity-100 md:visible`}
-                        >
-                            {navLinks?.map((link) => (
-                                <NavLink
-                                    onClick={() => setIsNavbarVisible(false)}
-                                    key={link?.path}
-                                    to={link?.path}
-                                    className={({ isActive }) =>
-                                        isActive
-                                            ? "text-cws-yellow font-semibold"
-                                            : "text-white font-semibold transition-colors hover:text-cws-yellow"
-                                    }
-                                >
-                                    <div className="flex items-center gap-1">
-                                        <GoDot className="block md:hidden" />
-                                        {link?.label}
-                                    </div>
-                                </NavLink>
-                            ))}
-                            <div className="flex items-center gap-2 sm:hidden">
+        <>
+            <div
+                className={`top-0 left-0 right-0 ${scroll ? "sticky animate-fadeInDown z-50" : ""}`}
+            >
+                <div className="bg-cws-primary-dark relative">
+                    <div className="container !py-5 flex items-center justify-between h-24 gap-7">
+                        <div className="w-32">
+                            <Link to="/">
+                                <img src={cws_logo} alt="PWS Logo" />
+                            </Link>
+                        </div>
+                        <div className="flex items-center gap-6">
+                            <div
+                                className={`flex gap-4 flex-col md:flex-row md:items-center absolute bg-cws-primary-light w-60 p-5 right-10 rounded-b-md ${
+                                    isNavbarVisible
+                                        ? "top-full visible opacity-100 transition-all"
+                                        : "top-20 invisible opacity-0"
+                                } md:static md:bg-transparent md:rounded-b-none md:w-auto md:opacity-100 md:visible`}
+                            >
+                                {navLinks?.map((link) => (
+                                    <NavLink
+                                        onClick={() => setIsNavbarVisible(false)}
+                                        key={link?.path}
+                                        to={link?.path}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "text-cws-yellow font-semibold"
+                                                : "text-white font-semibold transition-colors hover:text-cws-yellow"
+                                        }
+                                    >
+                                        <div className="flex items-center gap-1">
+                                            <GoDot className="block md:hidden" />
+                                            {link?.label}
+                                        </div>
+                                    </NavLink>
+                                ))}
+                                <div className="flex items-center gap-2 sm:hidden">
+                                    <Button
+                                        onClick={handleLoginOut}
+                                        className="px-5 bg-cws-primary-dark transition-all hover:bg-cws-yellow hidden sm:flex"
+                                    >
+                                        {user ? "Log out" : "Log in"}
+                                    </Button>
+                                    <Button
+                                        shape="icon"
+                                        className="px-5 bg-cws-primary-dark transition-all hover:bg-cws-yellow  text-2xl"
+                                    >
+                                        <LuShoppingCart />
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2">
                                 <Button
-                                    onClick={handleLoginOut}
-                                    className="px-5 bg-cws-primary-dark transition-all hover:bg-cws-yellow hidden sm:flex"
+                                    onClick={() => setIsNavbarVisible((prev) => !prev)}
+                                    shape="icon"
+                                    className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow md:hidden"
                                 >
-                                    {user ? "Log out" : "Log in"}
+                                    <FaBars />
                                 </Button>
                                 <Button
                                     shape="icon"
-                                    className="px-5 bg-cws-primary-dark transition-all hover:bg-cws-yellow  text-2xl"
+                                    onClick={() => navigate(`/dashboard/${user?.role}`)}
+                                    className={`px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex ${
+                                        !user?.role ? "!hidden" : "flex"
+                                    }`}
                                 >
-                                    <LuShoppingCart />
+                                    <MdSpaceDashboard className="text-xl" />
+                                </Button>
+                                <Button
+                                    onClick={handleLoginOut}
+                                    className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex"
+                                >
+                                    {user ? "Log out" : "Log in"}
                                 </Button>
                             </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button
-                                onClick={() => setIsNavbarVisible((prev) => !prev)}
-                                shape="icon"
-                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow md:hidden"
-                            >
-                                <FaBars />
-                            </Button>
-                            <Button
-                                shape="icon"
-                                onClick={() => navigate(`/dashboard/${user?.role}`)}
-                                className={`px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex ${
-                                    !user?.role ? "!hidden" : "flex"
-                                }`}
-                            >
-                                <MdSpaceDashboard className="text-xl" />
-                            </Button>
-                            <Button
-                                onClick={handleLoginOut}
-                                className="px-5 bg-cws-primary-light transition-all hover:bg-cws-yellow hidden sm:flex"
-                            >
-                                {user ? "Log out" : "Log in"}
-                            </Button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div
+                className={`fixed right-10 z-50 transition-all duration-300 ${
+                    isScrollTopVisible
+                        ? "bottom-10 visible opacity-100"
+                        : "bottom-14 invisible opacity-0"
+                }`}
+            >
+                <Button
+                    onClick={scrollToTop}
+                    shape="icon"
+                    className="bg-cws-yellow hover:bg-cws-yellow/90 active:bg-cws-yellow"
+                >
+                    <ArrowUp />
+                </Button>
+            </div>
+        </>
     );
 };
 
