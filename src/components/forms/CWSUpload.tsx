@@ -8,6 +8,20 @@ type TCWSTextarea = {
     label?: string;
 };
 
+const displayValue = (value: string | File) => {
+    if (!value) {
+        return "Choose file to upload";
+    }
+
+    if (typeof value === "string") {
+        return value.length >20 ? `${value.slice(0, 20)}...` : value;
+    }
+
+    if (typeof value === "object" && value !== null && "name" in value) {
+        return value.name;
+    }
+};
+
 const CWSUpload = ({ name, label }: TCWSTextarea) => {
     const [fileTypeError, setFileTypeError] = useState<string | null>(null);
     return (
@@ -28,6 +42,7 @@ const CWSUpload = ({ name, label }: TCWSTextarea) => {
                         }
                     }
                 };
+
                 return (
                     <fieldset className="space-y-2">
                         {label ? <Label htmlFor={name}>{label}</Label> : null}
@@ -39,7 +54,7 @@ const CWSUpload = ({ name, label }: TCWSTextarea) => {
                                     </div>
                                     <div>
                                         <h4 className="text-lg text-slate-500 font-semibold">
-                                            {value?.name ?? "Choose file to upload"}
+                                            {displayValue(value)}
                                         </h4>
                                         <p className="text-slate-400">JPG/PNG Format</p>
                                     </div>
@@ -54,8 +69,12 @@ const CWSUpload = ({ name, label }: TCWSTextarea) => {
                                 {...field}
                             />
                         </div>
-                        {fileTypeError && <small className="text-red-500 block">{fileTypeError}</small>}
-                        {error ? <small className="text-red-500 block">{error?.message}</small> : null}
+                        {fileTypeError && (
+                            <small className="text-red-500 block">{fileTypeError}</small>
+                        )}
+                        {error ? (
+                            <small className="text-red-500 block">{error?.message}</small>
+                        ) : null}
                     </fieldset>
                 );
             }}

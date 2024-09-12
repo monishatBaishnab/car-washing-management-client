@@ -150,21 +150,7 @@ const Slots = () => {
                                 {item.availability}
                             </Badge>
                         </TableCell>
-                        <TableCell align="right">
-                            {/* <div className="space-x-3">
-                                <Button
-                                    className="bg-green-500 hover:bg-green-500/80 active:bg-green-500"
-                                    shape="icon"
-                                >
-                                    <FaEdit className="text-lg" />
-                                </Button>
-                                <Button
-                                    className="bg-red-500 hover:bg-red-500/80 active:bg-red-500"
-                                    shape="icon"
-                                >
-                                    <FaTrash className="text-lg" />
-                                </Button>
-                            </div> */}
+                        <TableCell align="right"> 
                             <div className="flex flex-col items-end gap-1">
                                 <Button
                                     disabled={
