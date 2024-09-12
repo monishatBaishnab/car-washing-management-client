@@ -2,7 +2,7 @@ import { TService } from "./services.types";
 
 export type TSlot = {
     _id: string;
-    service: string | TService;
+    service: TService | string;
     date: string;
     startTime: string;
     endTime: string;

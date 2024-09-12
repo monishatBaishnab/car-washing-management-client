@@ -30,13 +30,14 @@ import createSlotSchema from "../../../schemas/slot.schema";
 
 type TFormattedSlot = {
     id: string;
+    service: string;
     date: string;
     startTime: string;
     endTime: string;
     availability: string;
 };
 
-const tableHeaders = ["Date", "Start Time", "End Time", "Availability", "Action"];
+const tableHeaders = ["Service", "Date", "Start Time", "End Time", "Availability", "Action"];
 
 const Slots = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -64,6 +65,7 @@ const Slots = () => {
     if (!isLoading && !isError) {
         tableData = slots?.data?.map((slot: TSlot) => ({
             id: slot?._id,
+            service: (slot?.service as TService)?.name,
             date: slot?.date,
             startTime: slot?.startTime,
             endTime: slot?.endTime,
@@ -133,6 +135,7 @@ const Slots = () => {
             <CWSTable data={tableData} isLoading={isLoading} headers={tableHeaders}>
                 {tableData.map((item) => (
                     <TableRow key={item.id}>
+                        <TableCell>{item.service}</TableCell>
                         <TableCell>{item.date}</TableCell>
                         <TableCell>{item.startTime}</TableCell>
                         <TableCell>{item.endTime}</TableCell>
@@ -150,7 +153,7 @@ const Slots = () => {
                                 {item.availability}
                             </Badge>
                         </TableCell>
-                        <TableCell align="right"> 
+                        <TableCell align="right">
                             <div className="flex flex-col items-end gap-1">
                                 <Button
                                     disabled={
