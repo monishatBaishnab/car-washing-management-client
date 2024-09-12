@@ -6,15 +6,15 @@ import { useNavigate } from "react-router-dom";
 import FeaturedServiceCard from "../../components/ui/FeaturedServiceCard";
 import { Parallax } from "react-parallax";
 import { Envelope } from "phosphor-react";
-import UserReview from "../../components/module/userReciew/UserReview";
+import UserReview from "../../components/module/userReview/UserReview";
 import { useFetchAllServicesQuery } from "../../redux/features/services/services.api";
 import { TService } from "../../types";
 
 const Home = () => {
     const navigate = useNavigate();
-    const { data: featuredServices } = useFetchAllServicesQuery([
-        { name: "featured", value: true },
-    ]);
+    const { data: featuredServices, isLoading: fetchingFeaturedService } = useFetchAllServicesQuery(
+        [{ name: "featured", value: true }]
+    );
 
     return (
         <>
@@ -87,9 +87,28 @@ const Home = () => {
                         }
                     />
                     <div className="grid gap-7 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-10">
-                        {featuredServices?.data?.map((service:TService) => (
-                            <FeaturedServiceCard service={service} key={service._id} />
-                        ))}
+                        {!featuredServices?.data?.length || fetchingFeaturedService
+                            ? Array.from({ length: 6 }).map((_, id) => (
+                                  <div
+                                      key={id}
+                                      className="bg-white space-y-2 w-full h-full animate-pulse p-5 border border-slate-200"
+                                  >
+                                      <div className="w-full h-60 sm:h-40 bg-gray-100"></div>
+                                      <div className="flex items-center gap-2 w-1/2">
+                                          <div className="w-full h-5 bg-gray-100"></div>
+                                          <div className="w-full h-5 bg-gray-100"></div>
+                                      </div>
+                                      <div className="w-full h-7 bg-gray-100"></div>
+                                      <div className="space-y-1">
+                                          <div className="w-full h-3 bg-gray-100"></div>
+                                          <div className="w-full h-3 bg-gray-100"></div>
+                                          <div className="w-full h-3 bg-gray-100"></div>
+                                      </div>
+                                  </div>
+                              ))
+                            : featuredServices?.data?.map((service: TService) => (
+                                  <FeaturedServiceCard service={service} key={service._id} />
+                              ))}
                     </div>
                 </div>
             </section>

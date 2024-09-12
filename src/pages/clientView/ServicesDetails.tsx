@@ -25,7 +25,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setBookingData } from "../../redux/features/bookings/bookings.slice";
 import { FaCircleCheck, FaRegCircleCheck } from "react-icons/fa6";
 import LoadingServiceDetails from "../../components/module/serviceDetails/LoadingServiceDetails";
-import EmptySlot from "../../components/module/serviceDetails/emptySlot";
+import EmptySlot from "../../components/module/serviceDetails/EmptySlot";
 
 type TSelectedDate = { label: string; value: string };
 

@@ -45,8 +45,8 @@ const Login = () => {
                 <CWSForm
                     resolver={zodResolver(loginSchema)}
                     defaultValues={{
-                        email: "support@gg-guru.com",
-                        password: "tg-password",
+                        email: "admin@gmail.com",
+                        password: "11",
                     }}
                     onSubmit={handleSubmit}
                 >

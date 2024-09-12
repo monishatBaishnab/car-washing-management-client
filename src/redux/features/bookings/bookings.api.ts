@@ -28,12 +28,14 @@ const bookingApi = baseApi.injectEndpoints({
             ],
         }),
         fetchUpcomingBookings: builder.query({
+            providesTags: ["upcoming-bookings"],
             query: () => ({
                 url: "/bookings/upcoming",
                 method: "GET",
             }),
         }),
         fetchMyBookings: builder.query({
+            providesTags: ["featured-bookings"],
             query: () => ({
                 url: "/bookings/my-bookings",
                 method: "GET",
@@ -42,5 +44,9 @@ const bookingApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useCreateBookingMutation, useFetchUpcomingBookingsQuery, useFetchMyBookingsQuery, useFetchAllBookingsQuery } =
-    bookingApi;
+export const {
+    useCreateBookingMutation,
+    useFetchUpcomingBookingsQuery,
+    useFetchMyBookingsQuery,
+    useFetchAllBookingsQuery,
+} = bookingApi;

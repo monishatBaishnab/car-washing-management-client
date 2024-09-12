@@ -22,7 +22,7 @@ const UserBookings = () => {
             serviceName: booking?.service?.name,
             date: booking?.slot?.date,
             startTime: booking?.slot?.startTime,
-            paymentStatus: booking?.paymentStatus,
+            paymentStatus: booking?.paymentStatus
         }));
     }
 
@@ -31,28 +31,36 @@ const UserBookings = () => {
             <h4 className="text-center text-2xl mb-5 font-bold">My Bookings</h4>
             <div>
                 <CWSTable data={tableData} isLoading={isUCBLoading} headers={tableHeaders}>
-                    {tableData.map((item) => (
-                        <TableRow key={item.id}>
-                            <TableCell>{item.serviceName}</TableCell>
-                            <TableCell>
-                                <Badge
-                                    color={
-                                        item?.paymentStatus === "completed"
-                                            ? "success"
-                                            : item?.paymentStatus === "pending"
-                                            ? "warning"
-                                            : "error"
-                                    }
-                                >
-                                    {item.paymentStatus}
-                                </Badge>
-                            </TableCell>
-                            <TableCell>{formatDate(`${item.date} ${item.startTime}`)}</TableCell>
-                            <TableCell>
-                                <Countdown date={new Date(`${item?.date}T${item.startTime}`)} />
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {tableData.map((item) => {
+                        const [month, day, year] = item?.date?.split("/") ?? [];
+                        // Create a new Date object using the split parts
+                        const dateStr = `${year}-${month}-${day}T${item?.startTime}`;
+
+                        return (
+                            <TableRow key={item.id}>
+                                <TableCell>{item.serviceName}</TableCell>
+                                <TableCell>
+                                    <Badge
+                                        color={
+                                            item?.paymentStatus === "completed"
+                                                ? "success"
+                                                : item?.paymentStatus === "pending"
+                                                ? "warning"
+                                                : "error"
+                                        }
+                                    >
+                                        {item.paymentStatus}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>
+                                    {formatDate(`${item.date} ${item.startTime}`)}
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Countdown date={new Date(dateStr)} />
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </CWSTable>
             </div>
         </>

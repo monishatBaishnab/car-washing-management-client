@@ -3,8 +3,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "./store";
 
+export const tagTypes = [
+    "user",
+    "services",
+    "bookings",
+    "featured-bookings",
+    "upcoming-bookings",
+    "slots",
+    "reviews",
+    "review-state",
+];
+
 const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api",
+    baseUrl: "https://car-washing-system-ten.vercel.app/api",
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
@@ -18,7 +29,7 @@ const baseQuery = fetchBaseQuery({
 
 export const baseApi = createApi({
     reducerPath: "cws_api",
-    tagTypes: ["user", "services", "bookings", 'slots', 'reviews', 'review-state'],
+    tagTypes,
     baseQuery,
     endpoints: (_builder) => ({}),
 });

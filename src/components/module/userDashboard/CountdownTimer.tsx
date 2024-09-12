@@ -31,6 +31,7 @@ const CountdownTimer = ({
             return;
         } else {
             const formatNumber = (num: number) => String(num).padStart(2, "0");
+
             return (
                 <div className="flex items-center justify-center flex-col  space-y-5 !mt-0 !pt-0">
                     <h2 className="text-xl sm:text-3xl text-cws-yellow uppercase font-bold">
@@ -49,10 +50,11 @@ const CountdownTimer = ({
             );
         }
     };
+    const [month, day, year] = booking?.date?.split("/") ?? [];
+    // Create a new Date object using the split parts
+    const dateStr = `${year}-${month}-${day}T${booking?.startTime}`;
 
-    return (
-        <Countdown date={new Date(`${booking?.date}T${booking?.startTime}`)} renderer={renderer} />
-    );
+    return <Countdown date={new Date(dateStr)} renderer={renderer} />;
 };
 
 export default CountdownTimer;

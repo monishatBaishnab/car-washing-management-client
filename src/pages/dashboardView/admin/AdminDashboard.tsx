@@ -49,28 +49,36 @@ const AdminDashboard = () => {
                     </Button>
                 </div>
                 <CWSTable data={tableData} isLoading={rcbLoading} headers={tableHeaders}>
-                    {tableData.map((item) => (
-                        <TableRow key={item.id}>
-                            <TableCell>{item.serviceName}</TableCell>
-                            <TableCell>
-                                <Badge
-                                    color={
-                                        item?.paymentStatus === "completed"
-                                            ? "success"
-                                            : item?.paymentStatus === "pending"
-                                            ? "warning"
-                                            : "error"
-                                    }
-                                >
-                                    {item.paymentStatus}
-                                </Badge>
-                            </TableCell>
-                            <TableCell>{formatDate(`${item.date} ${item.startTime}`)}</TableCell>
-                            <TableCell>
-                                <Countdown date={new Date(`${item?.date}T${item.startTime}`)} />
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {tableData.map((item) => {
+                        const [month, day, year] = item?.date?.split("/") ?? [];
+                        // Create a new Date object using the split parts
+                        const dateStr = `${year}-${month}-${day}T${item?.startTime}`;
+
+                        return (
+                            <TableRow key={item.id}>
+                                <TableCell>{item.serviceName}</TableCell>
+                                <TableCell>
+                                    <Badge
+                                        color={
+                                            item?.paymentStatus === "completed"
+                                                ? "success"
+                                                : item?.paymentStatus === "pending"
+                                                ? "warning"
+                                                : "error"
+                                        }
+                                    >
+                                        {item.paymentStatus}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>
+                                    {formatDate(`${item.date} ${item.startTime}`)}
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Countdown date={new Date(dateStr)} />
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </CWSTable>
             </div>
         </div>

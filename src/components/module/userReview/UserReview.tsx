@@ -1,6 +1,6 @@
 import { Button, toast } from "keep-react";
 import SectionTItle from "../../ui/SectionTItle";
-import { FaLongArrowAltRight, FaRegStar } from "react-icons/fa";
+import { FaLongArrowAltRight } from "react-icons/fa";
 import { useAppSelector } from "../../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,9 +14,9 @@ import CWSTextarea from "../../forms/CWSTextarea";
 import CWSRating from "../../forms/CWSRating";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TReview, TUserResponse } from "../../../types";
+import { TReview } from "../../../types";
 import { CgSpinnerTwo } from "react-icons/cg";
-import { FaQuoteLeft, FaStar } from "react-icons/fa6";
+import ReviewCard from "./ReviewCard";
 const UserReview = () => {
     const navigate = useNavigate();
     const user = useAppSelector((state) => state.auth.user);
@@ -25,8 +25,7 @@ const UserReview = () => {
         { name: "limit", value: 2 },
     ]);
     const { data: reviewState } = useFetchReviewStateQuery(undefined);
-    const { totalCompletedWashes, totalPositiveReviews, averageRating, yearsOfService } =
-        reviewState?.data ?? {};
+    const { totalCompletedWashes, totalPositiveReviews, averageRating, yearsOfService } = reviewState?.data ?? {};
 
     const statistics = [
         {
@@ -93,7 +92,10 @@ const UserReview = () => {
                     <SectionTItle
                         title="User Reviews"
                         rightContent={
-                            <Button className="gap-1 hover:gap-4 bg-white outline outline-cws-yellow text-cws-yellow hover:bg-cws-yellow hover:text-white">
+                            <Button
+                                onClick={() => navigate("/user-reviews")}
+                                className="gap-1 hover:gap-4 bg-white outline outline-cws-yellow text-cws-yellow hover:bg-cws-yellow hover:text-white"
+                            >
                                 See all reviews <FaLongArrowAltRight />
                             </Button>
                         }
@@ -103,46 +105,7 @@ const UserReview = () => {
                         <div className="sm:col-span-2 space-y-4">
                             {userReviews?.data && !fetchingUserReviews
                                 ? userReviews?.data?.map((review: TReview) => (
-                                      <div className="bg-white p-5 shadow-sm relative border border-slate-200">
-                                          <div className="space-y-3">
-                                              <p className="text-slate-600 text-center">
-                                                  {review?.review}
-                                              </p>
-                                              <div className="flex items-center gap-1 justify-center">
-                                                  {Array.from({ length: review?.rating })?.map(
-                                                      (_, id) => {
-                                                          return (
-                                                              <FaStar
-                                                                  key={id}
-                                                                  className="text-cws-yellow"
-                                                              />
-                                                          );
-                                                      }
-                                                  )}
-                                                  {Array.from({ length: 5 - review?.rating })?.map(
-                                                      (_, id) => {
-                                                          return (
-                                                              <FaRegStar
-                                                                  key={id}
-                                                                  className="text-cws-yellow"
-                                                              />
-                                                          );
-                                                      }
-                                                  )}
-                                              </div>
-                                              <div className="text-center">
-                                                  <h5 className="-mb-1 font-medium">
-                                                      {(review?.user as TUserResponse)?.name}
-                                                  </h5>
-                                                  <small className="text-slate-500">
-                                                      {(review?.user as TUserResponse)?.email}
-                                                  </small>
-                                              </div>
-                                          </div>
-                                          <div className="absolute  left-5 top-5 text-6xl text-cws-yellow/20">
-                                              <FaQuoteLeft />
-                                          </div>
-                                      </div>
+                                      <ReviewCard key={review?._id} review={review} />
                                   ))
                                 : null}
                         </div>
@@ -181,7 +144,7 @@ const UserReview = () => {
                             <div
                                 className={`${
                                     !user ? "block" : "hidden"
-                                } absolute left-0 right-0 top-0 bottom-0 bg-cws-primary-light/40 flex items-center justify-center`}
+                                } absolute left-0 right-0 top-0 bottom-0 bg-cws-primary-light/40 backdrop-blur-sm flex items-center justify-center`}
                             >
                                 <Button
                                     onClick={() => navigate("/login", { state: { from: "/" } })}

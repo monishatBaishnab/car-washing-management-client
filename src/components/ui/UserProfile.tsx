@@ -6,14 +6,17 @@ import {
 } from "../../redux/features/auth/auth.api";
 import { useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import UserProfileUpdate from "./UserProfileUpdate";
+import { jwtDecode } from "jwt-decode";
+import { setUser } from "../../redux/features/auth/authSlice";
 
 const UserProfile = () => {
     const [updateProfile, { isLoading: isPULoading }] = useUpdateProfileMutation();
     const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
     const user = useAppSelector((state) => state.auth.user);
     const { data: userInfo, isLoading: isUserLoading } = useFetchUserInfoQuery(user?.email);
+    const dispatch = useAppDispatch();
 
     const handleSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
@@ -25,7 +28,9 @@ const UserProfile = () => {
                 toast.error("Failed to update profile.");
             }
             if (res.data) {
-                toast.success("Profile updated successfully.");
+                toast.success("Profile updated successfully."); 
+                const userData = jwtDecode(res.data.token);
+                dispatch(setUser({ user: userData, token: res.data.token }));
                 setIsUpdateModalVisible(false);
             }
         } catch (error) {

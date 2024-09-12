@@ -13,7 +13,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { ArrowUp } from "phosphor-react";
 
 const navLinks = navLinksGenerator(clientViewConfig);
-console.log(navLinks);
+
 const CWSNavbar = () => {
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
@@ -26,7 +26,11 @@ const CWSNavbar = () => {
         if (user === null) {
             return navigate("/login");
         } else if (user) {
-            return dispatch(logOut());
+            // Then, log out the user after invalidating the cache
+            dispatch(logOut());
+
+            // Optionally, redirect to another page after logout
+            navigate("/login");
         }
     };
 
