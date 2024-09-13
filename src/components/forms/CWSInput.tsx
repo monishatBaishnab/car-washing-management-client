@@ -8,9 +8,10 @@ type TCWSInput = {
     type: string;
     placeholder: string;
     icon?: ReactNode;
+    disabled?: boolean;
 };
 
-const CWSInput = ({ name, label, type, placeholder, icon }: TCWSInput) => {
+const CWSInput = ({ name, label, type, placeholder, icon, disabled = false }: TCWSInput) => {
     return (
         <Controller
             name={name}
@@ -20,6 +21,7 @@ const CWSInput = ({ name, label, type, placeholder, icon }: TCWSInput) => {
                         {label ? <Label htmlFor={name}>{label}</Label> : null}
                         <div className="relative">
                             <Input
+                                disabled={disabled}
                                 {...field}
                                 value={value}
                                 type={type}

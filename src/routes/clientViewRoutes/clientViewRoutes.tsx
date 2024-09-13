@@ -1,3 +1,4 @@
+import ProtectedRoute from "../../layout/ProtectedRoute";
 import Booking from "../../pages/clientView/Booking";
 import Home from "../../pages/clientView/Home";
 import Services from "../../pages/clientView/Services";
@@ -17,11 +18,19 @@ const clientViewConfig = [
     },
     {
         path: "services/:serviceId",
-        element: <ServicesDetails />,
+        element: (
+            <ProtectedRoute>
+                <ServicesDetails />
+            </ProtectedRoute>
+        ),
     },
     {
         path: "bookings",
-        element: <Booking />,
+        element: (
+            <ProtectedRoute>
+                <Booking />
+            </ProtectedRoute>
+        ),
     },
     {
         path: "user-reviews",

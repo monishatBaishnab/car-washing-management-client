@@ -223,13 +223,13 @@ const ServicesDetails = () => {
                                                         </h4>
                                                     </div>
                                                     <CWSForm
-                                                        defaultValues={{
-                                                            vehicleType: "truck",
-                                                            vehicleBrand: "Ford",
-                                                            vehicleModel: "Explorer",
-                                                            manufacturingYear: 2021,
-                                                            registrationPlate: "XYZ456",
-                                                        }}
+                                                        // defaultValues={{
+                                                        //     vehicleType: "truck",
+                                                        //     vehicleBrand: "Ford",
+                                                        //     vehicleModel: "Explorer",
+                                                        //     manufacturingYear: 2021,
+                                                        //     registrationPlate: "XYZ456",
+                                                        // }}
                                                         resolver={zodResolver(vehicleSchema)}
                                                         onSubmit={handleBooking}
                                                     >

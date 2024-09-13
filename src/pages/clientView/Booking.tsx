@@ -19,7 +19,7 @@ const Booking = () => {
     const [createBooking, { isLoading }] = useCreateBookingMutation();
     const { bookingData, serviceData } = useAppSelector((state) => state.bookings);
     const cUser = useAppSelector((state) => state.auth?.user);
-
+    
     const handleBooking: SubmitHandler<FieldValues> = async (data) => {
         const { fName, lName, email, mobile, address } = data ?? {};
         const customerInfo = {
@@ -109,11 +109,7 @@ const Booking = () => {
                                 </h4>
                                 <CWSForm
                                     defaultValues={{
-                                        fName: "John",
-                                        lName: "Doe",
                                         email: cUser?.email,
-                                        mobile: "123-456-7890",
-                                        address: "123 Main St, Springfield, IL",
                                     }}
                                     resolver={zodResolver(userInfoSchema)}
                                     onSubmit={handleBooking}
@@ -135,6 +131,7 @@ const Booking = () => {
                                         </div>
                                         <div className="grid grid-cols-2 gap-5">
                                             <CWSInput
+                                                disabled
                                                 type="email"
                                                 name="email"
                                                 label="Email"
@@ -199,7 +196,6 @@ const Booking = () => {
                     </div>
                 </div>
             </section>
-
         </>
     );
 };

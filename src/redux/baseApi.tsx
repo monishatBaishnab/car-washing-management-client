@@ -12,6 +12,7 @@ export const tagTypes = [
     "slots",
     "reviews",
     "review-state",
+    "users",
 ];
 
 const baseQuery = fetchBaseQuery({

@@ -42,14 +42,7 @@ const Login = () => {
     return (
         <section className="bg-slate-100">
             <div className="flex w-full min-h-screen items-center justify-center">
-                <CWSForm
-                    resolver={zodResolver(loginSchema)}
-                    defaultValues={{
-                        email: "admin@gmail.com",
-                        password: "11",
-                    }}
-                    onSubmit={handleSubmit}
-                >
+                <CWSForm resolver={zodResolver(loginSchema)} onSubmit={handleSubmit}>
                     <div className="bg-white p-5 min-w-96 space-y-3">
                         <h4 className="text-xl font-medium mb-5">Sign In to Continue</h4>
                         <CWSInput

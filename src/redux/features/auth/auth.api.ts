@@ -2,6 +2,13 @@ import { baseApi } from "../../baseApi";
 
 const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        fetchAllUsers: builder.query({
+            providesTags: ["users"],
+            query: () => ({
+                url: `auth/users`,
+                method: "GET",
+            }),
+        }),
         fetchUserInfo: builder.query({
             providesTags: ["user"],
             query: (email) => ({
@@ -28,6 +35,7 @@ const authApi = baseApi.injectEndpoints({
                 url: `/auth/create-admin/${id}`,
                 method: "PATCH",
             }),
+            invalidatesTags: ["users"],
         }),
         updateProfile: builder.mutation({
             query: ({ id, data }) => ({
@@ -35,13 +43,14 @@ const authApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
-            invalidatesTags: ['user']
+            invalidatesTags: ["user"],
         }),
     }),
 });
 
 // Export the generated hooks
 export const {
+    useFetchAllUsersQuery,
     useLoginMutation,
     useRegisterMutation,
     useCreateAdminMutation,
